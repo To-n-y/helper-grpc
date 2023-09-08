@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package observer;
+
+import "google/protobuf/wrappers.proto";
+
+message Event {
+  uint64 id = 1;
+  string name = 2;
+  string type = 3;
+  google.protobuf.BoolValue age_restrictions = 4;
+  uint64 day = 5;
+  string time = 6;
+}
+
+message CreateEventRequest {
+  string name = 1;
+  string type = 2;
+  google.protobuf.BoolValue age_restrictions = 3;
+  uint64 day = 4;
+  string time = 5;
+}
+
+message CreateEventResponse {
+  Event Event = 1;
+}
+
+message ReadEventRequest {
+  uint64 id = 1;
+}
+
+message ReadEventResponse {
+  Event Event = 1;
+}
+
+message UpdateEventRequest {
+  string name = 1;
+  string type = 2;
+  google.protobuf.BoolValue age_restrictions = 3;
+  uint64 day = 4;
+  string time = 5;
+}
+
+message UpdateEventResponse {
+  Event Event = 1;
+}
+
+message DeleteEventRequest {
+  uint64 id = 1;
+}
+
+message DeleteEventResponse {
+  bool success = 1;
+}
+
+message ListEventsRequest {}
+
+message ListEventsResponse {
+  repeated Event Events = 1;
+}
+
+
+service EventService {
+  rpc CreateEvent(CreateEventRequest) returns (CreateEventResponse);
+  rpc ReadEvent(ReadEventRequest) returns (ReadEventResponse);
+  rpc UpdateEvent(UpdateEventRequest) returns (UpdateEventResponse);
+  rpc DeleteEvent(DeleteEventRequest) returns (DeleteEventResponse);
+  rpc ListEvents(ListEventsRequest) returns (ListEventsResponse);
+}
