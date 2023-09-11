@@ -6,69 +6,19 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
-class Event(_message.Message):
-    __slots__ = ["id", "name", "type", "age_restrictions", "day", "time"]
-    ID_FIELD_NUMBER: _ClassVar[int]
-    NAME_FIELD_NUMBER: _ClassVar[int]
-    TYPE_FIELD_NUMBER: _ClassVar[int]
-    AGE_RESTRICTIONS_FIELD_NUMBER: _ClassVar[int]
-    DAY_FIELD_NUMBER: _ClassVar[int]
-    TIME_FIELD_NUMBER: _ClassVar[int]
-    id: int
-    name: str
-    type: str
-    age_restrictions: _wrappers_pb2.BoolValue
-    day: int
-    time: str
-    def __init__(self, id: _Optional[int] = ..., name: _Optional[str] = ..., type: _Optional[str] = ..., age_restrictions: _Optional[_Union[_wrappers_pb2.BoolValue, _Mapping]] = ..., day: _Optional[int] = ..., time: _Optional[str] = ...) -> None: ...
-
 class CreateEventRequest(_message.Message):
-    __slots__ = ["name", "type", "age_restrictions", "day", "time"]
-    NAME_FIELD_NUMBER: _ClassVar[int]
-    TYPE_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = ["age_restrictions", "day", "name", "type"]
     AGE_RESTRICTIONS_FIELD_NUMBER: _ClassVar[int]
     DAY_FIELD_NUMBER: _ClassVar[int]
-    TIME_FIELD_NUMBER: _ClassVar[int]
-    name: str
-    type: str
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    TYPE_FIELD_NUMBER: _ClassVar[int]
     age_restrictions: _wrappers_pb2.BoolValue
     day: int
-    time: str
-    def __init__(self, name: _Optional[str] = ..., type: _Optional[str] = ..., age_restrictions: _Optional[_Union[_wrappers_pb2.BoolValue, _Mapping]] = ..., day: _Optional[int] = ..., time: _Optional[str] = ...) -> None: ...
+    name: str
+    type: str
+    def __init__(self, name: _Optional[str] = ..., type: _Optional[str] = ..., age_restrictions: _Optional[_Union[_wrappers_pb2.BoolValue, _Mapping]] = ..., day: _Optional[int] = ...) -> None: ...
 
 class CreateEventResponse(_message.Message):
-    __slots__ = ["Event"]
-    EVENT_FIELD_NUMBER: _ClassVar[int]
-    Event: Event
-    def __init__(self, Event: _Optional[_Union[Event, _Mapping]] = ...) -> None: ...
-
-class ReadEventRequest(_message.Message):
-    __slots__ = ["id"]
-    ID_FIELD_NUMBER: _ClassVar[int]
-    id: int
-    def __init__(self, id: _Optional[int] = ...) -> None: ...
-
-class ReadEventResponse(_message.Message):
-    __slots__ = ["Event"]
-    EVENT_FIELD_NUMBER: _ClassVar[int]
-    Event: Event
-    def __init__(self, Event: _Optional[_Union[Event, _Mapping]] = ...) -> None: ...
-
-class UpdateEventRequest(_message.Message):
-    __slots__ = ["name", "type", "age_restrictions", "day", "time"]
-    NAME_FIELD_NUMBER: _ClassVar[int]
-    TYPE_FIELD_NUMBER: _ClassVar[int]
-    AGE_RESTRICTIONS_FIELD_NUMBER: _ClassVar[int]
-    DAY_FIELD_NUMBER: _ClassVar[int]
-    TIME_FIELD_NUMBER: _ClassVar[int]
-    name: str
-    type: str
-    age_restrictions: _wrappers_pb2.BoolValue
-    day: int
-    time: str
-    def __init__(self, name: _Optional[str] = ..., type: _Optional[str] = ..., age_restrictions: _Optional[_Union[_wrappers_pb2.BoolValue, _Mapping]] = ..., day: _Optional[int] = ..., time: _Optional[str] = ...) -> None: ...
-
-class UpdateEventResponse(_message.Message):
     __slots__ = ["Event"]
     EVENT_FIELD_NUMBER: _ClassVar[int]
     Event: Event
@@ -86,6 +36,20 @@ class DeleteEventResponse(_message.Message):
     success: bool
     def __init__(self, success: bool = ...) -> None: ...
 
+class Event(_message.Message):
+    __slots__ = ["age_restrictions", "day", "id", "name", "type"]
+    AGE_RESTRICTIONS_FIELD_NUMBER: _ClassVar[int]
+    DAY_FIELD_NUMBER: _ClassVar[int]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    TYPE_FIELD_NUMBER: _ClassVar[int]
+    age_restrictions: _wrappers_pb2.BoolValue
+    day: int
+    id: int
+    name: str
+    type: str
+    def __init__(self, id: _Optional[int] = ..., name: _Optional[str] = ..., type: _Optional[str] = ..., age_restrictions: _Optional[_Union[_wrappers_pb2.BoolValue, _Mapping]] = ..., day: _Optional[int] = ...) -> None: ...
+
 class ListEventsRequest(_message.Message):
     __slots__ = []
     def __init__(self) -> None: ...
@@ -95,3 +59,35 @@ class ListEventsResponse(_message.Message):
     EVENTS_FIELD_NUMBER: _ClassVar[int]
     Events: _containers.RepeatedCompositeFieldContainer[Event]
     def __init__(self, Events: _Optional[_Iterable[_Union[Event, _Mapping]]] = ...) -> None: ...
+
+class ReadEventRequest(_message.Message):
+    __slots__ = ["id"]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    id: int
+    def __init__(self, id: _Optional[int] = ...) -> None: ...
+
+class ReadEventResponse(_message.Message):
+    __slots__ = ["Event"]
+    EVENT_FIELD_NUMBER: _ClassVar[int]
+    Event: Event
+    def __init__(self, Event: _Optional[_Union[Event, _Mapping]] = ...) -> None: ...
+
+class UpdateEventRequest(_message.Message):
+    __slots__ = ["age_restrictions", "day", "id", "name", "type"]
+    AGE_RESTRICTIONS_FIELD_NUMBER: _ClassVar[int]
+    DAY_FIELD_NUMBER: _ClassVar[int]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    TYPE_FIELD_NUMBER: _ClassVar[int]
+    age_restrictions: _wrappers_pb2.BoolValue
+    day: int
+    id: int
+    name: str
+    type: str
+    def __init__(self, id: _Optional[int] = ..., name: _Optional[str] = ..., type: _Optional[str] = ..., age_restrictions: _Optional[_Union[_wrappers_pb2.BoolValue, _Mapping]] = ..., day: _Optional[int] = ...) -> None: ...
+
+class UpdateEventResponse(_message.Message):
+    __slots__ = ["Event"]
+    EVENT_FIELD_NUMBER: _ClassVar[int]
+    Event: Event
+    def __init__(self, Event: _Optional[_Union[Event, _Mapping]] = ...) -> None: ...

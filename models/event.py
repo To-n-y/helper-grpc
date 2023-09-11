@@ -1,4 +1,4 @@
-from piccolo.columns import Boolean, Varchar, Integer, Time
+from piccolo.columns import Boolean, Varchar, Integer
 from piccolo.engine.sqlite import SQLiteEngine
 from piccolo.table import Table
 
@@ -10,4 +10,3 @@ class Event(Table, db=DB):
     type = Varchar()
     age_restrictions = Boolean(default=False)
     day = Integer(default=0)
-    time = Time()

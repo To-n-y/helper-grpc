@@ -10,7 +10,6 @@ message Event {
   string type = 3;
   google.protobuf.BoolValue age_restrictions = 4;
   uint64 day = 5;
-  string time = 6;
 }
 
 message CreateEventRequest {
@@ -18,7 +17,6 @@ message CreateEventRequest {
   string type = 2;
   google.protobuf.BoolValue age_restrictions = 3;
   uint64 day = 4;
-  string time = 5;
 }
 
 message CreateEventResponse {
@@ -34,11 +32,11 @@ message ReadEventResponse {
 }
 
 message UpdateEventRequest {
-  string name = 1;
-  string type = 2;
-  google.protobuf.BoolValue age_restrictions = 3;
-  uint64 day = 4;
-  string time = 5;
+  uint64 id = 1;
+  string name = 2;
+  string type = 3;
+  google.protobuf.BoolValue age_restrictions = 4;
+  uint64 day = 5;
 }
 
 message UpdateEventResponse {
