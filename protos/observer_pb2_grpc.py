@@ -2,10 +2,10 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from protos import observer_pb2 as protos_dot_observer__pb2
+from . import observer_pb2 as protos_dot_observer__pb2
 
 
-class EventServiceStub(object):
+class ObserverServiceStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -15,33 +15,33 @@ class EventServiceStub(object):
             channel: A grpc.Channel.
         """
         self.CreateEvent = channel.unary_unary(
-                '/observer.EventService/CreateEvent',
+                '/observer.ObserverService/CreateEvent',
                 request_serializer=protos_dot_observer__pb2.CreateEventRequest.SerializeToString,
                 response_deserializer=protos_dot_observer__pb2.CreateEventResponse.FromString,
                 )
         self.ReadEvent = channel.unary_unary(
-                '/observer.EventService/ReadEvent',
+                '/observer.ObserverService/ReadEvent',
                 request_serializer=protos_dot_observer__pb2.ReadEventRequest.SerializeToString,
                 response_deserializer=protos_dot_observer__pb2.ReadEventResponse.FromString,
                 )
         self.UpdateEvent = channel.unary_unary(
-                '/observer.EventService/UpdateEvent',
+                '/observer.ObserverService/UpdateEvent',
                 request_serializer=protos_dot_observer__pb2.UpdateEventRequest.SerializeToString,
                 response_deserializer=protos_dot_observer__pb2.UpdateEventResponse.FromString,
                 )
         self.DeleteEvent = channel.unary_unary(
-                '/observer.EventService/DeleteEvent',
+                '/observer.ObserverService/DeleteEvent',
                 request_serializer=protos_dot_observer__pb2.DeleteEventRequest.SerializeToString,
                 response_deserializer=protos_dot_observer__pb2.DeleteEventResponse.FromString,
                 )
         self.ListEvents = channel.unary_unary(
-                '/observer.EventService/ListEvents',
+                '/observer.ObserverService/ListEvents',
                 request_serializer=protos_dot_observer__pb2.ListEventsRequest.SerializeToString,
                 response_deserializer=protos_dot_observer__pb2.ListEventsResponse.FromString,
                 )
 
 
-class EventServiceServicer(object):
+class ObserverServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def CreateEvent(self, request, context):
@@ -75,7 +75,7 @@ class EventServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_EventServiceServicer_to_server(servicer, server):
+def add_ObserverServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'CreateEvent': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateEvent,
@@ -104,12 +104,12 @@ def add_EventServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'observer.EventService', rpc_method_handlers)
+            'observer.ObserverService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
  # This class is part of an EXPERIMENTAL API.
-class EventService(object):
+class ObserverService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -123,7 +123,7 @@ class EventService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/observer.EventService/CreateEvent',
+        return grpc.experimental.unary_unary(request, target, '/observer.ObserverService/CreateEvent',
             protos_dot_observer__pb2.CreateEventRequest.SerializeToString,
             protos_dot_observer__pb2.CreateEventResponse.FromString,
             options, channel_credentials,
@@ -140,7 +140,7 @@ class EventService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/observer.EventService/ReadEvent',
+        return grpc.experimental.unary_unary(request, target, '/observer.ObserverService/ReadEvent',
             protos_dot_observer__pb2.ReadEventRequest.SerializeToString,
             protos_dot_observer__pb2.ReadEventResponse.FromString,
             options, channel_credentials,
@@ -157,7 +157,7 @@ class EventService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/observer.EventService/UpdateEvent',
+        return grpc.experimental.unary_unary(request, target, '/observer.ObserverService/UpdateEvent',
             protos_dot_observer__pb2.UpdateEventRequest.SerializeToString,
             protos_dot_observer__pb2.UpdateEventResponse.FromString,
             options, channel_credentials,
@@ -174,7 +174,7 @@ class EventService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/observer.EventService/DeleteEvent',
+        return grpc.experimental.unary_unary(request, target, '/observer.ObserverService/DeleteEvent',
             protos_dot_observer__pb2.DeleteEventRequest.SerializeToString,
             protos_dot_observer__pb2.DeleteEventResponse.FromString,
             options, channel_credentials,
@@ -191,7 +191,7 @@ class EventService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/observer.EventService/ListEvents',
+        return grpc.experimental.unary_unary(request, target, '/observer.ObserverService/ListEvents',
             protos_dot_observer__pb2.ListEventsRequest.SerializeToString,
             protos_dot_observer__pb2.ListEventsResponse.FromString,
             options, channel_credentials,

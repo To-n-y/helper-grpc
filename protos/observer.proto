@@ -60,7 +60,7 @@ message ListEventsResponse {
 }
 
 
-service EventService {
+service ObserverService {
   rpc CreateEvent(CreateEventRequest) returns (CreateEventResponse);
   rpc ReadEvent(ReadEventRequest) returns (ReadEventResponse);
   rpc UpdateEvent(UpdateEventRequest) returns (UpdateEventResponse);
