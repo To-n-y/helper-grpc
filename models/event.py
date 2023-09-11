@@ -2,7 +2,7 @@ from piccolo.columns import Boolean, Varchar, Integer, Time
 from piccolo.engine.sqlite import SQLiteEngine
 from piccolo.table import Table
 
-DB = SQLiteEngine("db.sqlite")
+DB = SQLiteEngine("test_database.db")
 
 
 class Event(Table, db=DB):
