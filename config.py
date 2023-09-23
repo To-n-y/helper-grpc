@@ -6,8 +6,6 @@ from starlette.datastructures import Secret
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 root_dir = dir_path + "\\db\\"
-print("ROOT", root_dir)
-print("DIR", dir_path)
 config = Config(f"{dir_path}\\.env")
 # DATABASE_URL = f"sqlite:///{root_dir}" + config(
 #     "DB_NAME", cast=str, default=os.getenv("DB_NAME", "db.sqlite")
