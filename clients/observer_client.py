@@ -1,7 +1,7 @@
 import grpc
 
 from protos import observer_pb2_grpc
-from settings import OBSERVER_GRPC_SERVER_ADDR
+from config import OBSERVER_GRPC_SERVER_ADDR
 
 
 async def grpc_observer_client():
