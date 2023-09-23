@@ -1,6 +1,3 @@
-install:
-	python -m pip install --upgrade pip
-	pip install -r requirements.txt
 db_up:
 	poetry run python scripts/create_db.py
 run:
@@ -11,3 +8,6 @@ lint:
 	poetry run mypy --install-types
 	poetry run mypy --explicit-package-bases clients api.py
 	poetry run black --check --line-length 79 --skip-string-normalization --extend-exclude="protos" .
+
+test:
+	poetry run pytest

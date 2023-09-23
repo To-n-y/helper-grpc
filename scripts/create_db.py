@@ -1,5 +1,5 @@
-import sys
 import os.path
+import sys
 
 parent = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(parent)

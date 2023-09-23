@@ -1,6 +1,6 @@
 import typing as t
 
-from fastapi import Depends, FastAPI, status, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.security.api_key import APIKeyHeader
 from google.protobuf.json_format import MessageToDict

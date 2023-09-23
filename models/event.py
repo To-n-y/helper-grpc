@@ -1,4 +1,4 @@
-from piccolo.columns import Boolean, Varchar, Integer
+from piccolo.columns import Boolean, Integer, Varchar
 from piccolo.engine.sqlite import SQLiteEngine
 from piccolo.table import Table
 
