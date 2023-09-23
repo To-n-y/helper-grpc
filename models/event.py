@@ -3,11 +3,7 @@ from sqlalchemy.orm import declarative_base, sessionmaker, Session
 
 from config import POSTGRES_URL
 
-engine = create_engine(str(POSTGRES_URL))
-
 Base = declarative_base()
-
-session = Session(bind=engine)
 
 
 class BaseModel(Base):
@@ -46,4 +42,8 @@ class Comment(BaseModel):
     event_id = Column(Integer, ForeignKey('Event.id'), nullable=False)
 
 
-#print(session.query(User).all())
+def connect_db():
+    engine = create_engine(str(POSTGRES_URL))
+    session = Session(bind=engine.connect())
+    return session
+# print(session.query(User).all())
