@@ -1,7 +1,9 @@
-db_up:
-	poetry run python scripts/create_db.py
 run:
 	poetry run uvicorn api:app --reload
+
+migrate:
+	poetry run alembic upgrade head
+
 lint:
 	poetry run isort .
 	poetry run flake8 service clients api.py

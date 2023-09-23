@@ -13,8 +13,11 @@ config = Config(f"{dir_path}\\.env")
 # print(DATABASE_URL)
 
 OBSERVER_GRPC_SERVER_ADDR = config(
-    "OBSERVER_GRPC_SERVER_ADDR", cast=Secret, default="secret"
+    "OBSERVER_GRPC_SERVER_ADDR", cast=Secret, default="secret1"
 )
 JAEGER_GRPC_SERVER_ADDR = config(
-    "JAEGER_GRPC_SERVER_ADDR", cast=Secret, default="secret"
+    "JAEGER_GRPC_SERVER_ADDR", cast=Secret, default="secret2"
+)
+POSTGRES_URL = config(
+    "POSTGRES_URL", cast=Secret, default="secret3"
 )
