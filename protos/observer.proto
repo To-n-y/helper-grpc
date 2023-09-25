@@ -2,20 +2,18 @@ syntax = "proto3";
 
 package observer;
 
-import "google/protobuf/wrappers.proto";
-
 message Event {
   uint64 id = 1;
   string name = 2;
   string type = 3;
-  google.protobuf.BoolValue age_restrictions = 4;
+  uint64 age_restrictions = 4;
   uint64 day = 5;
 }
 
 message CreateEventRequest {
   string name = 1;
   string type = 2;
-  google.protobuf.BoolValue age_restrictions = 3;
+  uint64 age_restrictions = 3;
   uint64 day = 4;
 }
 
@@ -23,7 +21,7 @@ message CreateEventResponse {
   Event Event = 1;
 }
 
-message ReadEventRequest {
+message ReadEventByIdRequest {
   uint64 id = 1;
 }
 
@@ -31,11 +29,11 @@ message ReadEventResponse {
   Event Event = 1;
 }
 
-message UpdateEventRequest {
+message UpdateEventByIdRequest {
   uint64 id = 1;
   string name = 2;
   string type = 3;
-  google.protobuf.BoolValue age_restrictions = 4;
+  uint64 age_restrictions = 4;
   uint64 day = 5;
 }
 
@@ -43,7 +41,7 @@ message UpdateEventResponse {
   Event Event = 1;
 }
 
-message DeleteEventRequest {
+message DeleteEventByIdRequest {
   uint64 id = 1;
 }
 
@@ -51,17 +49,17 @@ message DeleteEventResponse {
   bool success = 1;
 }
 
-message ListEventsRequest {}
+message ListEventRequest {}
 
-message ListEventsResponse {
+message ListEventResponse {
   repeated Event Events = 1;
 }
 
 
 service ObserverService {
   rpc CreateEvent(CreateEventRequest) returns (CreateEventResponse);
-  rpc ReadEvent(ReadEventRequest) returns (ReadEventResponse);
-  rpc UpdateEvent(UpdateEventRequest) returns (UpdateEventResponse);
-  rpc DeleteEvent(DeleteEventRequest) returns (DeleteEventResponse);
-  rpc ListEvents(ListEventsRequest) returns (ListEventsResponse);
+  rpc ReadEventById(ReadEventByIdRequest) returns (ReadEventResponse);
+  rpc UpdateEventById(UpdateEventByIdRequest) returns (UpdateEventResponse);
+  rpc DeleteEventById(DeleteEventByIdRequest) returns (DeleteEventResponse);
+  rpc ListEvent(ListEventRequest) returns (ListEventResponse);
 }

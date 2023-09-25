@@ -19,25 +19,25 @@ class ObserverServiceStub(object):
                 request_serializer=protos_dot_observer__pb2.CreateEventRequest.SerializeToString,
                 response_deserializer=protos_dot_observer__pb2.CreateEventResponse.FromString,
                 )
-        self.ReadEvent = channel.unary_unary(
-                '/observer.ObserverService/ReadEvent',
-                request_serializer=protos_dot_observer__pb2.ReadEventRequest.SerializeToString,
+        self.ReadEventById = channel.unary_unary(
+                '/observer.ObserverService/ReadEventById',
+                request_serializer=protos_dot_observer__pb2.ReadEventByIdRequest.SerializeToString,
                 response_deserializer=protos_dot_observer__pb2.ReadEventResponse.FromString,
                 )
-        self.UpdateEvent = channel.unary_unary(
-                '/observer.ObserverService/UpdateEvent',
-                request_serializer=protos_dot_observer__pb2.UpdateEventRequest.SerializeToString,
+        self.UpdateEventById = channel.unary_unary(
+                '/observer.ObserverService/UpdateEventById',
+                request_serializer=protos_dot_observer__pb2.UpdateEventByIdRequest.SerializeToString,
                 response_deserializer=protos_dot_observer__pb2.UpdateEventResponse.FromString,
                 )
-        self.DeleteEvent = channel.unary_unary(
-                '/observer.ObserverService/DeleteEvent',
-                request_serializer=protos_dot_observer__pb2.DeleteEventRequest.SerializeToString,
+        self.DeleteEventById = channel.unary_unary(
+                '/observer.ObserverService/DeleteEventById',
+                request_serializer=protos_dot_observer__pb2.DeleteEventByIdRequest.SerializeToString,
                 response_deserializer=protos_dot_observer__pb2.DeleteEventResponse.FromString,
                 )
-        self.ListEvents = channel.unary_unary(
-                '/observer.ObserverService/ListEvents',
-                request_serializer=protos_dot_observer__pb2.ListEventsRequest.SerializeToString,
-                response_deserializer=protos_dot_observer__pb2.ListEventsResponse.FromString,
+        self.ListEvent = channel.unary_unary(
+                '/observer.ObserverService/ListEvent',
+                request_serializer=protos_dot_observer__pb2.ListEventRequest.SerializeToString,
+                response_deserializer=protos_dot_observer__pb2.ListEventResponse.FromString,
                 )
 
 
@@ -50,25 +50,25 @@ class ObserverServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def ReadEvent(self, request, context):
+    def ReadEventById(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def UpdateEvent(self, request, context):
+    def UpdateEventById(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def DeleteEvent(self, request, context):
+    def DeleteEventById(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def ListEvents(self, request, context):
+    def ListEvent(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -82,25 +82,25 @@ def add_ObserverServiceServicer_to_server(servicer, server):
                     request_deserializer=protos_dot_observer__pb2.CreateEventRequest.FromString,
                     response_serializer=protos_dot_observer__pb2.CreateEventResponse.SerializeToString,
             ),
-            'ReadEvent': grpc.unary_unary_rpc_method_handler(
-                    servicer.ReadEvent,
-                    request_deserializer=protos_dot_observer__pb2.ReadEventRequest.FromString,
+            'ReadEventById': grpc.unary_unary_rpc_method_handler(
+                    servicer.ReadEventById,
+                    request_deserializer=protos_dot_observer__pb2.ReadEventByIdRequest.FromString,
                     response_serializer=protos_dot_observer__pb2.ReadEventResponse.SerializeToString,
             ),
-            'UpdateEvent': grpc.unary_unary_rpc_method_handler(
-                    servicer.UpdateEvent,
-                    request_deserializer=protos_dot_observer__pb2.UpdateEventRequest.FromString,
+            'UpdateEventById': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateEventById,
+                    request_deserializer=protos_dot_observer__pb2.UpdateEventByIdRequest.FromString,
                     response_serializer=protos_dot_observer__pb2.UpdateEventResponse.SerializeToString,
             ),
-            'DeleteEvent': grpc.unary_unary_rpc_method_handler(
-                    servicer.DeleteEvent,
-                    request_deserializer=protos_dot_observer__pb2.DeleteEventRequest.FromString,
+            'DeleteEventById': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteEventById,
+                    request_deserializer=protos_dot_observer__pb2.DeleteEventByIdRequest.FromString,
                     response_serializer=protos_dot_observer__pb2.DeleteEventResponse.SerializeToString,
             ),
-            'ListEvents': grpc.unary_unary_rpc_method_handler(
-                    servicer.ListEvents,
-                    request_deserializer=protos_dot_observer__pb2.ListEventsRequest.FromString,
-                    response_serializer=protos_dot_observer__pb2.ListEventsResponse.SerializeToString,
+            'ListEvent': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListEvent,
+                    request_deserializer=protos_dot_observer__pb2.ListEventRequest.FromString,
+                    response_serializer=protos_dot_observer__pb2.ListEventResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -130,7 +130,7 @@ class ObserverService(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def ReadEvent(request,
+    def ReadEventById(request,
             target,
             options=(),
             channel_credentials=None,
@@ -140,14 +140,14 @@ class ObserverService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/observer.ObserverService/ReadEvent',
-            protos_dot_observer__pb2.ReadEventRequest.SerializeToString,
+        return grpc.experimental.unary_unary(request, target, '/observer.ObserverService/ReadEventById',
+            protos_dot_observer__pb2.ReadEventByIdRequest.SerializeToString,
             protos_dot_observer__pb2.ReadEventResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def UpdateEvent(request,
+    def UpdateEventById(request,
             target,
             options=(),
             channel_credentials=None,
@@ -157,14 +157,14 @@ class ObserverService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/observer.ObserverService/UpdateEvent',
-            protos_dot_observer__pb2.UpdateEventRequest.SerializeToString,
+        return grpc.experimental.unary_unary(request, target, '/observer.ObserverService/UpdateEventById',
+            protos_dot_observer__pb2.UpdateEventByIdRequest.SerializeToString,
             protos_dot_observer__pb2.UpdateEventResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def DeleteEvent(request,
+    def DeleteEventById(request,
             target,
             options=(),
             channel_credentials=None,
@@ -174,14 +174,14 @@ class ObserverService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/observer.ObserverService/DeleteEvent',
-            protos_dot_observer__pb2.DeleteEventRequest.SerializeToString,
+        return grpc.experimental.unary_unary(request, target, '/observer.ObserverService/DeleteEventById',
+            protos_dot_observer__pb2.DeleteEventByIdRequest.SerializeToString,
             protos_dot_observer__pb2.DeleteEventResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def ListEvents(request,
+    def ListEvent(request,
             target,
             options=(),
             channel_credentials=None,
@@ -191,8 +191,8 @@ class ObserverService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/observer.ObserverService/ListEvents',
-            protos_dot_observer__pb2.ListEventsRequest.SerializeToString,
-            protos_dot_observer__pb2.ListEventsResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/observer.ObserverService/ListEvent',
+            protos_dot_observer__pb2.ListEventRequest.SerializeToString,
+            protos_dot_observer__pb2.ListEventResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

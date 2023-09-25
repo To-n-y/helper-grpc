@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package user;
+
+
+
+message User {
+  uint64 id = 1;
+  string name = 2;
+  string role = 3;
+}
+
+message ReadUserRequest {
+  string token = 1;
+}
+
+message ReadUserResponse {
+  User user = 1;
+}
+
+message LoginRequest {
+  string name = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
+}
+
+service AuthService {
+  rpc ReadUser(ReadUserRequest) returns (ReadUserResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
+}
+//login - get token
+// readUser - get user by token
