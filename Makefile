@@ -1,15 +1,21 @@
-run:
+run_gateway:
 	poetry run uvicorn api:app --reload
 
-migrate:
+run_observer:
+	python observer_app.py
+
+make_migrate:
+	poetry run alembic revision --autogenerate
+
+migrate_head:
 	poetry run alembic upgrade head
 
 lint:
-	poetry run isort .
+	poetry run isort service clients api.py
 	poetry run flake8 service clients api.py
+	poetry run black --check --line-length 79 --skip-string-normalization --extend-exclude="protos" service models clients api.py
 	poetry run mypy --install-types
-	poetry run mypy --explicit-package-bases clients api.py
-	poetry run black --check --line-length 79 --skip-string-normalization --extend-exclude="protos" .
+	poetry run mypy --pretty --config-file pyproject.toml .
 
 test:
 	poetry run pytest
