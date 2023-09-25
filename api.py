@@ -1,13 +1,15 @@
 import typing as t
 
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, status, Security
 from fastapi.responses import JSONResponse
 from fastapi.security.api_key import APIKeyHeader
 from google.protobuf.json_format import MessageToDict
+from google.protobuf import empty_pb2
 from grpc.aio import AioRpcError
 
 from clients.observer_client import grpc_observer_client
-from protos import observer_pb2
+from clients.auth_client import grpc_auth_client
+from protos import observer_pb2, auth_pb2
 
 api_key_header = APIKeyHeader(name="rpc-auth-key")
 
@@ -21,10 +23,10 @@ async def ping():
 
 @app.get("/event")
 async def get_events_list(
-    client: t.Any = Depends(grpc_observer_client),
+        client: t.Any = Depends(grpc_observer_client),
 ) -> JSONResponse:
     try:
-        events = await client.ListEvents(observer_pb2.ListEventsRequest())
+        events = await client.ListEvent(observer_pb2.ListEventRequest())
     except AioRpcError as e:
         raise HTTPException(status_code=400, detail=e.details())
 
@@ -33,10 +35,12 @@ async def get_events_list(
 
 @app.get("/event/{id:int}")
 async def get_event(
-    id: int, client: t.Any = Depends(grpc_observer_client)
+        id: int, client: t.Any = Depends(grpc_observer_client),
 ) -> JSONResponse:
     try:
-        event = await client.ReadEvent(observer_pb2.ReadEventRequest(id=id))
+        event = await client.ReadEventById(
+            observer_pb2.ReadEventByIdRequest(id=id)
+        )
     except AioRpcError as e:
         raise HTTPException(status_code=400, detail=e.details())
 
@@ -45,16 +49,16 @@ async def get_event(
 
 @app.post("/event", status_code=status.HTTP_201_CREATED)
 async def create_event(
-    name: str,
-    type: str,
-    age_rest: bool,
-    day: int,
-    client: t.Any = Depends(grpc_observer_client),
+        name: str,
+        typ: str,
+        age_rest: int,
+        day: int,
+        client: t.Any = Depends(grpc_observer_client),
 ) -> JSONResponse:
     try:
         event = await client.CreateEvent(
             observer_pb2.CreateEventRequest(
-                name=name, type=type, age_restrictions=age_rest, day=day
+                name=name, type=typ, age_restrictions=age_rest, day=day
             )
         )
     except AioRpcError as e:
@@ -65,16 +69,16 @@ async def create_event(
 
 @app.patch("/event/{id:int}")
 async def update_event(
-    id: int,
-    name: str,
-    type: str,
-    age_rest: bool,
-    day: int,
-    client: t.Any = Depends(grpc_observer_client),
+        id: int,
+        name: str,
+        type: str,
+        age_rest: int,
+        day: int,
+        client: t.Any = Depends(grpc_observer_client),
 ) -> JSONResponse:
     try:
-        event = await client.UpdateEvent(
-            observer_pb2.UpdateEventRequest(
+        event = await client.UpdateEventById(
+            observer_pb2.UpdateEventByIdRequest(
                 id=id, name=name, type=type, age_restrictions=age_rest, day=day
             )
         )
@@ -86,13 +90,45 @@ async def update_event(
 
 @app.delete("/event/{id:int}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_event(
-    id: int, client: t.Any = Depends(grpc_observer_client)
+        id: int, client: t.Any = Depends(grpc_observer_client),
 ) -> JSONResponse:
     try:
-        event = await client.DeleteEvent(
-            observer_pb2.DeleteEventRequest(id=id)
+        event = await client.DeleteEventById(
+            observer_pb2.DeleteEventByIdRequest(id=id)
         )
     except AioRpcError as e:
         raise HTTPException(status_code=400, detail=e.details())
 
     return JSONResponse(MessageToDict(event))
+
+
+@app.get("/user")
+async def get_user(
+        api_key: str = Security(api_key_header),
+        client: t.Any = Depends(grpc_auth_client),
+) -> JSONResponse:
+    print(f"api_key_header {api_key}")
+    try:
+        curr_user = await client.ReadUser(auth_pb2.ReadUserRequest(token=api_key))
+    except AioRpcError as e:
+        import traceback
+
+        traceback.print_exc()
+        raise HTTPException(status_code=400, detail=e.details())
+    return JSONResponse(MessageToDict(curr_user))
+
+
+@app.get("/login")
+async def get_token(
+        name: str,
+        password: str,
+        client: t.Any = Depends(grpc_auth_client),
+) -> JSONResponse:
+    try:
+        token = await client.Login(auth_pb2.LoginRequest(name=name, password=password))
+    except AioRpcError as e:
+        import traceback
+
+        traceback.print_exc()
+        raise HTTPException(status_code=400, detail=e.details())
+    return JSONResponse(MessageToDict(token))
