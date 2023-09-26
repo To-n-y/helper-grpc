@@ -4,6 +4,9 @@ run_gateway:
 run_observer:
 	python observer_app.py
 
+run_auth:
+	python auth_app.py
+
 make_migrate:
 	poetry run alembic revision --autogenerate
 
@@ -19,3 +22,6 @@ lint:
 
 test:
 	poetry run pytest
+
+update_proto:
+	python -m grpc_tools.protoc --python_out=. --grpc_python_out=. --pyi_out=. --proto_path=. protos/*.proto

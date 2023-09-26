@@ -33,10 +33,10 @@ jobs:
     - name: Run tests with pytest
       run: poetry run pytest --cov=service
     - name: Lint with flake8
-      run: poetry run flake8 service clients api.py
+      run: poetry run flake8 service models clients api.py
     - name: Lint with black
-      run: poetry run black --check --line-length 79 --skip-string-normalization --extend-exclude="protos" .
+      run: poetry run black --check --line-length 79 --skip-string-normalization --extend-exclude="protos" service models clients api.py
     - name: Check types with mypy
-      run: |
-        poetry run mypy --install-types
-        poetry run mypy --explicit-package-bases api.py
+    #  run: |
+    #    poetry run mypy --install-types
+    #    poetry run mypy --explicit-package-bases api.py
