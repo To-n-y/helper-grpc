@@ -37,6 +37,3 @@ jobs:
     - name: Lint with black
       run: poetry run black --check --line-length 79 --skip-string-normalization --extend-exclude="protos" service models clients api.py
     - name: Check types with mypy
-    #  run: |
-    #    poetry run mypy --install-types
-    #    poetry run mypy --explicit-package-bases api.py
