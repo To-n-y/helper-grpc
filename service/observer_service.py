@@ -9,7 +9,7 @@ from opentelemetry.instrumentation.grpc import (
 from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 from opentelemetry.sdk.trace import TracerProvider
 
-from models.event import Event, connect_db
+from models.models import Event, connect_db
 from protos import observer_pb2, observer_pb2_grpc
 
 
@@ -18,15 +18,32 @@ class ObserverService(observer_pb2_grpc.ObserverServiceServicer):
     async def ListEvent(self, request, context):
         session = connect_db()
         events = session.query(Event).all()
+        events_response = [
+            observer_pb2.Event(
+                id=x.id,
+                name=x.name,
+                type=x.type,
+                age_restrictions=x.age_restrictions,
+                day=x.day,
+            )
+            for x in events
+        ]
         print("GetEventList")
-        return observer_pb2.ListEventResponse(Events=events)
+        return observer_pb2.ListEventResponse(Events=events_response)
 
     # single event
     async def ReadEventById(self, request, context):
         session = connect_db()
         event = session.query(Event).filter(Event.id == request.id).first()
+        event_response = observer_pb2.Event(
+            id=event.id,
+            name=event.name,
+            type=event.type,
+            age_restrictions=event.age_restrictions,
+            day=event.day,
+        )
         print("GetEventById")
-        return observer_pb2.ReadEventResponse(Event=event)
+        return observer_pb2.ReadEventResponse(Event=event_response)
 
     # create event
     async def CreateEvent(self, request, context):
