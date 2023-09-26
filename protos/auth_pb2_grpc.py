@@ -24,6 +24,11 @@ class AuthServiceStub(object):
                 request_serializer=protos_dot_auth__pb2.LoginRequest.SerializeToString,
                 response_deserializer=protos_dot_auth__pb2.LoginResponse.FromString,
                 )
+        self.CreateUser = channel.unary_unary(
+                '/user.AuthService/CreateUser',
+                request_serializer=protos_dot_auth__pb2.CreateUserRequest.SerializeToString,
+                response_deserializer=protos_dot_auth__pb2.CreateUserResponse.FromString,
+                )
 
 
 class AuthServiceServicer(object):
@@ -41,6 +46,12 @@ class AuthServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def CreateUser(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_AuthServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -53,6 +64,11 @@ def add_AuthServiceServicer_to_server(servicer, server):
                     servicer.Login,
                     request_deserializer=protos_dot_auth__pb2.LoginRequest.FromString,
                     response_serializer=protos_dot_auth__pb2.LoginResponse.SerializeToString,
+            ),
+            'CreateUser': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateUser,
+                    request_deserializer=protos_dot_auth__pb2.CreateUserRequest.FromString,
+                    response_serializer=protos_dot_auth__pb2.CreateUserResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -95,5 +111,22 @@ class AuthService(object):
         return grpc.experimental.unary_unary(request, target, '/user.AuthService/Login',
             protos_dot_auth__pb2.LoginRequest.SerializeToString,
             protos_dot_auth__pb2.LoginResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def CreateUser(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/user.AuthService/CreateUser',
+            protos_dot_auth__pb2.CreateUserRequest.SerializeToString,
+            protos_dot_auth__pb2.CreateUserResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

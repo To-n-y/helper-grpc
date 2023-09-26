@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11protos/auth.proto\x12\x04user\".\n\x04User\x12\n\n\x02id\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0c\n\x04role\x18\x03 \x01(\t\" \n\x0fReadUserRequest\x12\r\n\x05token\x18\x01 \x01(\t\",\n\x10ReadUserResponse\x12\x18\n\x04user\x18\x01 \x01(\x0b\x32\n.user.User\".\n\x0cLoginRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"\x1e\n\rLoginResponse\x12\r\n\x05token\x18\x01 \x01(\t2z\n\x0b\x41uthService\x12\x39\n\x08ReadUser\x12\x15.user.ReadUserRequest\x1a\x16.user.ReadUserResponse\x12\x30\n\x05Login\x12\x12.user.LoginRequest\x1a\x13.user.LoginResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11protos/auth.proto\x12\x04user\".\n\x04User\x12\n\n\x02id\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0c\n\x04role\x18\x03 \x01(\t\" \n\x0fReadUserRequest\x12\r\n\x05token\x18\x01 \x01(\t\",\n\x10ReadUserResponse\x12\x18\n\x04user\x18\x01 \x01(\x0b\x32\n.user.User\".\n\x0cLoginRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"\x1e\n\rLoginResponse\x12\r\n\x05token\x18\x01 \x01(\t\"R\n\x11\x43reateUserRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05\x65mail\x18\x02 \x01(\t\x12\x0e\n\x06gender\x18\x03 \x01(\t\x12\x10\n\x08password\x18\x04 \x01(\t\".\n\x12\x43reateUserResponse\x12\x18\n\x04user\x18\x01 \x01(\x0b\x32\n.user.User2\xbb\x01\n\x0b\x41uthService\x12\x39\n\x08ReadUser\x12\x15.user.ReadUserRequest\x1a\x16.user.ReadUserResponse\x12\x30\n\x05Login\x12\x12.user.LoginRequest\x1a\x13.user.LoginResponse\x12?\n\nCreateUser\x12\x17.user.CreateUserRequest\x1a\x18.user.CreateUserResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -31,6 +31,10 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['_LOGINREQUEST']._serialized_end=201
   _globals['_LOGINRESPONSE']._serialized_start=203
   _globals['_LOGINRESPONSE']._serialized_end=233
-  _globals['_AUTHSERVICE']._serialized_start=235
-  _globals['_AUTHSERVICE']._serialized_end=357
+  _globals['_CREATEUSERREQUEST']._serialized_start=235
+  _globals['_CREATEUSERREQUEST']._serialized_end=317
+  _globals['_CREATEUSERRESPONSE']._serialized_start=319
+  _globals['_CREATEUSERRESPONSE']._serialized_end=365
+  _globals['_AUTHSERVICE']._serialized_start=368
+  _globals['_AUTHSERVICE']._serialized_end=555
 # @@protoc_insertion_point(module_scope)

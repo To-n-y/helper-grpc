@@ -39,3 +39,21 @@ class LoginResponse(_message.Message):
     TOKEN_FIELD_NUMBER: _ClassVar[int]
     token: str
     def __init__(self, token: _Optional[str] = ...) -> None: ...
+
+class CreateUserRequest(_message.Message):
+    __slots__ = ["name", "email", "gender", "password"]
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    EMAIL_FIELD_NUMBER: _ClassVar[int]
+    GENDER_FIELD_NUMBER: _ClassVar[int]
+    PASSWORD_FIELD_NUMBER: _ClassVar[int]
+    name: str
+    email: str
+    gender: str
+    password: str
+    def __init__(self, name: _Optional[str] = ..., email: _Optional[str] = ..., gender: _Optional[str] = ..., password: _Optional[str] = ...) -> None: ...
+
+class CreateUserResponse(_message.Message):
+    __slots__ = ["user"]
+    USER_FIELD_NUMBER: _ClassVar[int]
+    user: User
+    def __init__(self, user: _Optional[_Union[User, _Mapping]] = ...) -> None: ...

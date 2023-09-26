@@ -27,9 +27,21 @@ message LoginResponse {
   string token = 1;
 }
 
+message CreateUserRequest {
+  string name = 1;
+  string email = 2;
+  string gender = 3;
+  string password = 4;
+}
+
+message CreateUserResponse {
+  User user = 1;
+}
+
 service AuthService {
   rpc ReadUser(ReadUserRequest) returns (ReadUserResponse);
   rpc Login(LoginRequest) returns (LoginResponse);
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
 }
 //login - get token
 // readUser - get user by token

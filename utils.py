@@ -1,5 +1,9 @@
+import hashlib
+
 import grpc
 from grpc.aio._interceptor import ClientCallDetails
+
+from config import SECRET_KEY
 
 
 class AuthInterceptor(grpc.aio.ServerInterceptor):
@@ -16,7 +20,7 @@ class AuthInterceptor(grpc.aio.ServerInterceptor):
             token = next(filter(lambda x: x.key == 'rpc-auth', meta)).value
         except StopIteration:
             return self._abortion
-        print(token)
+        print("TOKEN", token)
 
         # TODO: check jwt token if incorrect - self._abortion
 
@@ -44,3 +48,7 @@ class KeyAuthClientInterceptor(grpc.aio.UnaryUnaryClientInterceptor):
         )
         response = await continuation(new_details, request)
         return response
+
+
+def get_hash_password(password: str) -> str:
+    return hashlib.sha256(f"{SECRET_KEY}{password}".encode("utf8")).hexdigest()
