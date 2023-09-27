@@ -1,15 +1,13 @@
-import hashlib
-
 import grpc
 from grpc.aio._interceptor import ClientCallDetails
-
-from config import SECRET_KEY
 
 
 class AuthInterceptor(grpc.aio.ServerInterceptor):
     def __init__(self):
         async def abort(ignored_request, context):
-            await context.abort(grpc.StatusCode.UNAUTHENTICATED, 'Invalid signature')
+            await context.abort(
+                grpc.StatusCode.UNAUTHENTICATED, 'Invalid signature'
+            )
 
         self._abortion = grpc.unary_unary_rpc_method_handler(abort)
 
@@ -34,7 +32,9 @@ class KeyAuthClientInterceptor(grpc.aio.UnaryUnaryClientInterceptor):
     def __init__(self, secret_key):
         self.secret_key: str = secret_key
 
-    async def intercept_unary_unary(self, continuation, client_call_details, request):
+    async def intercept_unary_unary(
+        self, continuation, client_call_details, request
+    ):
         metadata = []
         if client_call_details.metadata is not None:
             metadata = list(client_call_details.metadata)
@@ -48,7 +48,3 @@ class KeyAuthClientInterceptor(grpc.aio.UnaryUnaryClientInterceptor):
         )
         response = await continuation(new_details, request)
         return response
-
-
-def get_hash_password(password: str) -> str:
-    return hashlib.sha256(f"{SECRET_KEY}{password}".encode("utf8")).hexdigest()

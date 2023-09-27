@@ -23,3 +23,12 @@ AUTH_GRPC_SERVER_ADDR = config(
 SECRET_KEY = config(
     "SECRET_KEY", cast=Secret, default="secret5"
 )
+JWT_SECRET_KEY = str(config(
+    "JWT_SECRET_KEY", cast=Secret, default="secret6"
+))
+ACCESS_TOKEN_EXPIRE_MINUTES = int(str(config(
+    "ACCESS_TOKEN_EXPIRE_MINUTES", cast=Secret, default="secret7"
+)))
+ALGORITHM = str(config(
+    "ALGORITHM", cast=Secret, default="secret8"
+))

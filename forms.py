@@ -11,3 +11,12 @@ class UserCreateForm(BaseModel):
     password: str
     username: str
     gender: str
+
+
+class TokenSchema(BaseModel):
+    access_token: str
+
+
+class TokenPayload(BaseModel):
+    sub: str | None = None
+    exp: int | None = None

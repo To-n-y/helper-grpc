@@ -1,8 +1,9 @@
 import grpc
 from fastapi import Request
+
 from config import AUTH_GRPC_SERVER_ADDR
 from protos import auth_pb2_grpc
-from utils import KeyAuthClientInterceptor
+from utils.interceptors import KeyAuthClientInterceptor
 
 
 async def grpc_auth_client(request: Request):
