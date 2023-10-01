@@ -1,0 +1,26 @@
+FROM python:3-alpine
+
+WORKDIR /app
+
+COPY pyproject.toml .
+COPY poetry.lock .
+COPY README.md .
+COPY clients/ ./clients/
+COPY forms.py .
+COPY config.py .
+COPY .env .
+COPY utils/ ./utils
+COPY protos/ ./protos/
+COPY models/ ./models/
+COPY api.py .
+
+# install psycopg2 dependencies
+RUN apk update
+RUN apk add postgresql-dev gcc python3-dev musl-dev
+
+RUN pip install poetry
+RUN poetry install --no-interaction --no-root
+
+EXPOSE 8000
+
+CMD ["poetry", "run", "uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

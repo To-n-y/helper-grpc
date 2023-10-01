@@ -1,0 +1,29 @@
+FROM python:3-alpine
+
+WORKDIR /app
+
+COPY pyproject.toml .
+COPY poetry.lock .
+COPY README.md .
+COPY service/observer_service.py ./service/
+COPY config.py .
+COPY models/ ./models/
+COPY forms.py .
+COPY utils/ ./utils/
+COPY .env .
+COPY protos/ ./protos/
+COPY observer_app.py .
+
+RUN pip install poetry
+
+# install psycopg2 dependencies
+RUN apk update
+RUN apk add postgresql-dev gcc python3-dev musl-dev
+
+
+RUN poetry install --no-interaction --no-root
+
+EXPOSE 5053
+
+
+CMD ["poetry", "run", "python", "auth_app.py"]
