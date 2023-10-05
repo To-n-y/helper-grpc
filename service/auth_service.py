@@ -1,6 +1,3 @@
-import datetime
-import uuid
-
 from grpc import aio
 from grpc_health.v1 import health_pb2, health_pb2_grpc
 from grpc_reflection.v1alpha import reflection
@@ -9,29 +6,32 @@ from opentelemetry.instrumentation.grpc import GrpcAioInstrumentorServer
 from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 from opentelemetry.sdk.trace import TracerProvider
 
-from models.models import AuthToken, User, connect_db
+from models.models import User, connect_db
 from protos import auth_pb2, auth_pb2_grpc
-from utils import AuthInterceptor, get_hash_password
+from utils.interceptors import AuthInterceptor
+from utils.jwt_utils import (
+    create_access_token,
+    get_current_user_email,
+    get_hashed_password,
+    verify_password,
+)
 
 
 class AuthService(auth_pb2_grpc.AuthServiceServicer):
     async def ReadUser(self, request, context):
         session = connect_db()
-        entered_token = (
-            session.query(AuthToken)
-            .filter(AuthToken.token == request.token)
-            .first()
-        )
 
-        if entered_token is None:
+        user_email = get_current_user_email(request.token)
+        if user_email is None:
             return auth_pb2.ReadUserResponse(
-                user={"id": 1, "name": "no such token", "role": "user"}
+                user={
+                    "id": 1,
+                    "name": "inspired",
+                    "role": "user",
+                }
             )
-        # TODO: inspiration time
-        # if datetime.datetime.utcnow > entered_token.created_at:
-        #    pass
-        cur_user = session.query(User).get(entered_token.user_id)
-        print("ReadUserByToken")
+        cur_user = session.query(User).filter(User.email == user_email).first()
+        print("ReadUserByToken", cur_user.id)
         return auth_pb2.ReadUserResponse(
             user={
                 "id": cur_user.id,
@@ -42,22 +42,27 @@ class AuthService(auth_pb2_grpc.AuthServiceServicer):
 
     async def Login(self, request, context):
         session = connect_db()
+
         cur_user = (
             session.query(User).filter(User.username == request.name).first()
         )
+
         if cur_user is None:
             return auth_pb2.LoginResponse(token='does not exist')
-        if cur_user.password != get_hash_password(request.password):
+        print("FIR")
+        print(request.password, cur_user.password)
+        if not verify_password(request.password, cur_user.password):
             return auth_pb2.LoginResponse(token='incorrect password')
-        new_token = AuthToken(user_id=cur_user.id, token=uuid.uuid4().hex)
-        session.add(new_token)
-        session.commit()
+        print("SEC")
         print("Create new token")
-        return auth_pb2.LoginResponse(token=new_token.token)
+        print(create_access_token(cur_user.email))
+        return auth_pb2.LoginResponse(
+            token=create_access_token(cur_user.email)
+        )
 
     async def CreateUser(self, request, context):
         session = connect_db()
-        hashed_password = get_hash_password(request.password)
+        hashed_password = get_hashed_password(request.password)
         new_user = User(
             username=request.name,
             email=request.email,
@@ -110,3 +115,6 @@ async def start(addr, jaeger_addr):
     print(f"AuthService {addr}")
     await server.start()
     await server.wait_for_termination()
+
+
+# TODO: checks and try-excepts

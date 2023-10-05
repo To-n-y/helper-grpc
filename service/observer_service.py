@@ -114,7 +114,7 @@ class ObserverService(observer_pb2_grpc.ObserverServiceServicer):
 
 async def start(addr, jaeger_addr):
     trace.set_tracer_provider(
-        TracerProvider(resource=Resource.create({SERVICE_NAME: "observer"}))
+        TracerProvider(resource=Resource.create({SERVICE_NAME: "Observer"}))
     )
 
     grpc_server_instrumentor = GrpcAioInstrumentorServer()

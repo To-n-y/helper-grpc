@@ -1,34 +1,25 @@
 import os
 
-from starlette.config import Config
-from starlette.datastructures import Secret
+from dotenv import load_dotenv
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
+dotenv_path = os.path.join(os.path.dirname(__file__), '.emnv')
+if os.path.exists(dotenv_path):
+    load_dotenv(dotenv_path)
 
-root_dir = dir_path + "\\db\\"
-config = Config(f"{dir_path}\\.env")
+OBSERVER_GRPC_SERVER_ADDR = os.environ.get('OBSERVER_GRPC_SERVER_ADDR', 'localhost:5053')
 
-OBSERVER_GRPC_SERVER_ADDR = config(
-    "OBSERVER_GRPC_SERVER_ADDR", cast=Secret, default="secret1"
-)
-JAEGER_GRPC_SERVER_ADDR = config(
-    "JAEGER_GRPC_SERVER_ADDR", cast=Secret, default="secret2"
-)
-POSTGRES_URL = config(
-    "POSTGRES_URL", cast=Secret, default="secret3"
-)
-AUTH_GRPC_SERVER_ADDR = config(
-    "AUTH_GRPC_SERVER_ADDR", cast=Secret, default="secret4"
-)
-SECRET_KEY = config(
-    "SECRET_KEY", cast=Secret, default="secret5"
-)
-JWT_SECRET_KEY = str(config(
-    "JWT_SECRET_KEY", cast=Secret, default="secret6"
-))
-ACCESS_TOKEN_EXPIRE_MINUTES = int(str(config(
-    "ACCESS_TOKEN_EXPIRE_MINUTES", cast=Secret, default="secret7"
-)))
-ALGORITHM = str(config(
-    "ALGORITHM", cast=Secret, default="secret8"
-))
+PLANNER_GRPC_SERVER_ADDR = os.environ.get('PLANNER_GRPC_SERVER_ADDR', 'localhost:5051')
+
+JAEGER_GRPC_SERVER_ADDR = os.environ.get('JAEGER_GRPC_SERVER_ADDR', 'localhost:50053')
+
+POSTGRES_URL = os.environ.get('POSTGRES_URL', 'postgresql://postgres:qwerty@localhost:5432/mydb')
+
+AUTH_GRPC_SERVER_ADDR = os.environ.get('AUTH_GRPC_SERVER_ADDR', 'localhost:5052')
+
+SECRET_KEY = os.environ.get('SECRET_KEY', 'secret1')
+
+JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', 'secret2')
+
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.environ.get('ACCESS_TOKEN_EXPIRE_MINUTES', '30'))
+
+ALGORITHM = os.environ.get('ALGORITHM', 'HS256')
