@@ -8,10 +8,9 @@ COPY README.md .
 COPY clients/ ./clients/
 COPY forms.py .
 COPY config.py .
-COPY .env .
+
 COPY utils/ ./utils
 COPY protos/ ./protos/
-COPY models/ ./models/
 COPY api.py .
 
 # install psycopg2 dependencies

@@ -15,17 +15,17 @@ class AuthServiceStub(object):
             channel: A grpc.Channel.
         """
         self.ReadUser = channel.unary_unary(
-                '/user.AuthService/ReadUser',
+                '/auth.AuthService/ReadUser',
                 request_serializer=protos_dot_auth__pb2.ReadUserRequest.SerializeToString,
                 response_deserializer=protos_dot_auth__pb2.ReadUserResponse.FromString,
                 )
         self.Login = channel.unary_unary(
-                '/user.AuthService/Login',
+                '/auth.AuthService/Login',
                 request_serializer=protos_dot_auth__pb2.LoginRequest.SerializeToString,
                 response_deserializer=protos_dot_auth__pb2.LoginResponse.FromString,
                 )
         self.CreateUser = channel.unary_unary(
-                '/user.AuthService/CreateUser',
+                '/auth.AuthService/CreateUser',
                 request_serializer=protos_dot_auth__pb2.CreateUserRequest.SerializeToString,
                 response_deserializer=protos_dot_auth__pb2.CreateUserResponse.FromString,
                 )
@@ -72,7 +72,7 @@ def add_AuthServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'user.AuthService', rpc_method_handlers)
+            'auth.AuthService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -91,7 +91,7 @@ class AuthService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/user.AuthService/ReadUser',
+        return grpc.experimental.unary_unary(request, target, '/auth.AuthService/ReadUser',
             protos_dot_auth__pb2.ReadUserRequest.SerializeToString,
             protos_dot_auth__pb2.ReadUserResponse.FromString,
             options, channel_credentials,
@@ -108,7 +108,7 @@ class AuthService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/user.AuthService/Login',
+        return grpc.experimental.unary_unary(request, target, '/auth.AuthService/Login',
             protos_dot_auth__pb2.LoginRequest.SerializeToString,
             protos_dot_auth__pb2.LoginResponse.FromString,
             options, channel_credentials,
@@ -125,7 +125,7 @@ class AuthService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/user.AuthService/CreateUser',
+        return grpc.experimental.unary_unary(request, target, '/auth.AuthService/CreateUser',
             protos_dot_auth__pb2.CreateUserRequest.SerializeToString,
             protos_dot_auth__pb2.CreateUserResponse.FromString,
             options, channel_credentials,

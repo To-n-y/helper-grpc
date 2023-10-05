@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package planner;
+
+
+message Event {
+  uint64 event_id = 1;
+  string event_name = 2;
+  string event_type = 3;
+}
+
+message Plan {
+  string user_name = 1;
+  Event event = 2;
+}
+
+message ReadUserPlanRequest {
+  uint64 user_id = 1;
+}
+
+message ReadUserPlanResponse {
+  repeated Event event = 1;
+}
+
+message CreateUserPlanRequest {
+  uint64 user_id = 1;
+  string event_name = 2;
+}
+
+message CreateUserPlanResponse {
+  Plan plan = 1;
+}
+
+service PlannerService {
+  rpc ReadPlans(ReadUserPlanRequest) returns (ReadUserPlanResponse);
+  rpc CreatePlan(CreateUserPlanRequest) returns (CreateUserPlanResponse);
+}
