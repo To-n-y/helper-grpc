@@ -1,5 +1,8 @@
 import asyncio
-
+import os
+import sys
+parent = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, parent)
 from config import JAEGER_GRPC_SERVER_ADDR, PLANNER_GRPC_SERVER_ADDR
 from service import planner_service
 

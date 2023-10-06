@@ -1,3 +1,8 @@
+import sys
+import os
+
+parent = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, parent)
 from service import auth_service
 import asyncio
 from config import AUTH_GRPC_SERVER_ADDR, JAEGER_GRPC_SERVER_ADDR

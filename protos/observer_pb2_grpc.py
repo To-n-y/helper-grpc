@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from protos import observer_pb2 as protos_dot_observer__pb2
+from . import observer_pb2 as protos_dot_observer__pb2
 
 
 class ObserverServiceStub(object):

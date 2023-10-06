@@ -1,4 +1,8 @@
 import typing as t
+import os
+import sys
+parent = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, parent)
 
 from fastapi import Body, Depends, FastAPI, HTTPException, Security, status
 from fastapi.responses import JSONResponse

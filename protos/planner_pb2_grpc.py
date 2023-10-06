@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from protos import planner_pb2 as protos_dot_planner__pb2
+from . import planner_pb2 as protos_dot_planner__pb2
 
 
 class PlannerServiceStub(object):
