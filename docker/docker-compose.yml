@@ -1,0 +1,66 @@
+version: '4.0'
+services:
+  postgres:
+    image: postgres
+    networks:
+      - mynetwork
+    environment:
+      POSTGRES_PASSWORD: "qwerty"
+
+
+  gateway:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.gateway
+    networks:
+      - mynetwork
+    env_file:
+      - ../.env
+    command: bash -c "poetry run uvicorn apps/apps.api:app --host 0.0.0.0 --port 8000"
+    depends_on:
+      - postgres
+
+  observer:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.observer
+    networks:
+      - mynetwork
+
+    env_file:
+      - ../.env
+    command:
+      - bash -c "poetry run alembic upgrade head"
+      - bash -c "poetry run python apps/observer_app.py"
+    depends_on:
+      - gateway
+
+  auth:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.auth
+    networks:
+      - mynetwork
+
+    env_file:
+      - ../.env
+    command: bash -c "poetry run python apps/auth_app.py"
+    depends_on:
+      - gateway
+
+  planner:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.planner
+    networks:
+      - mynetwork
+
+    env_file:
+      - ../.env
+    command: bash -c "poetry run python apps/planner_app.py"
+    depends_on:
+      - gateway
+
+networks:
+  mynetwork:
+    driver: bridge

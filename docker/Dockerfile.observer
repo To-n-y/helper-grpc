@@ -9,9 +9,9 @@ COPY service/observer_service.py ./service/
 COPY config.py .
 COPY models/ ./models/
 COPY protos/ ./protos/
-COPY observer_app.py .
 COPY alembic/ ./alembic/
 COPY alembic.ini .
+COPY apps/observer_app.py ./apps/
 
 RUN pip install poetry
 
@@ -23,5 +23,5 @@ RUN apk add postgresql-dev gcc python3-dev musl-dev
 RUN poetry install --no-interaction --no-root
 
 
-CMD ["poetry", "run", "alembic", "upgrade", "head"]
-CMD ["poetry", "run", "python", "observer_app.py"]
+#CMD ["poetry", "run", "alembic", "upgrade", "head"]
+#CMD ["poetry", "run", "python", "observer_app.py"]

@@ -5,13 +5,12 @@ WORKDIR /app
 COPY pyproject.toml .
 COPY poetry.lock .
 COPY README.md .
-COPY service/auth_service.py ./service/
+COPY service/planner_service.py ./service/
 COPY config.py .
+
 COPY models/ ./models/
-COPY forms.py .
-COPY utils/ ./utils/
 COPY protos/ ./protos/
-COPY apps/auth_app.py ./apps/
+COPY apps/planner_app.py ./apps/
 
 RUN pip install poetry
 
@@ -23,4 +22,4 @@ RUN apk add postgresql-dev gcc python3-dev musl-dev
 RUN poetry install --no-interaction --no-root
 
 
-#CMD ["poetry", "run", "python", "auth_app.py"]
+#CMD ["poetry", "run", "python", "planner_app.py"]
