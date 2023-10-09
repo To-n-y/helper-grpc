@@ -51,6 +51,15 @@ class Event(BaseModel):
     day = Column(Integer, nullable=False)
 
 
+class Plan(BaseModel):
+    __tablename__ = "Plan"
+
+    user_id = Column(Integer, ForeignKey("User.id"))
+    event_id = Column(Integer, ForeignKey("Event.id"))
+    event_type = Column(String(255), nullable=False)
+    name = Column(String, nullable=False)
+
+
 class Comment(BaseModel):
     __tablename__ = 'Comment'
 
@@ -73,9 +82,11 @@ def connect_db():
     return session
 
 
-# print(session.query(User).all())
 # session = connect_db()
-# event = session.query(Event).filter(Event.id == 1).first()
+# user = session.query(User).filter(User.username == '11').first()
+# print(user)
+# print(session.query(User).all())
+#session = connect_db()
 # if event is not None:
 #     session.delete(event)
 #     session.commit()

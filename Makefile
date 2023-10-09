@@ -17,7 +17,7 @@ migrate_head:
 	poetry run alembic upgrade head
 
 test:
-	poetry run pytest -cov=service --cov-report xml
+	poetry run pytest --slow -cov=service --cov-report xml
 
 lint:
 	poetry run isort service clients utils apps
