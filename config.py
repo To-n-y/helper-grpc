@@ -14,6 +14,8 @@ JAEGER_GRPC_SERVER_ADDR = os.environ.get('JAEGER_GRPC_SERVER_ADDR', 'localhost:5
 
 POSTGRES_URL = os.environ.get('POSTGRES_URL', 'postgresql://postgres:qwerty@localhost:5432/mydb')
 
+POSTGRES_URL_DOCKER = os.environ.get('POSTGRES_URL_DOCKER', 'postgresql://postgres:qwerty@localhost:5432/mydb')
+
 AUTH_GRPC_SERVER_ADDR = os.environ.get('AUTH_GRPC_SERVER_ADDR', 'localhost:5052')
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'secret1')
