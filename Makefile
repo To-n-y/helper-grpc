@@ -1,57 +1,52 @@
-run_gateway:
+CODE_FOLDERS := apps service clients models
+TEST_FOLDERS := tests
+
+
+.PHONY: format test lint run migration migrate update_proto db_up docker_up docker_build docker_run run_bandit
+
+format:
+	poetry run black --line-length 79 --skip-string-normalization --extend-exclude="protos" $(CODE_FOLDERS) $(TEST_FOLDERS)
+	isort $(CODE_FOLDERS) $(TEST_FOLDERS)
+
+run:
+ifeq ($(x),gateway)
 	poetry run uvicorn apps.api:app --reload
-
-run_observer:
-	python apps/observer_app.py
-
-run_planner:
-	python apps/planner_app.py
-
-run_auth:
-	python apps/auth_app.py
-
-make_migrate:
-	poetry run alembic revision --autogenerate
-
-migrate_head:
-	poetry run alembic upgrade head
+else
+	poetry run python apps/$(x)_app.py
+endif
 
 test:
 	poetry run pytest --slow -cov=service --cov-report xml
 
 lint:
-	poetry run isort service clients utils apps
-	poetry run flake8 service clients utils apps
-	poetry run black --check --line-length 79 --skip-string-normalization --extend-exclude="protos" service models clients utils apps
-	poetry run mypy --install-types
-	poetry run mypy --pretty --config-file pyproject.toml .
+	poetry run isort $(CODE_FOLDERS) $(TEST_FOLDERS)
+	poetry run flake8 $(CODE_FOLDERS) $(TEST_FOLDERS)
+	poetry run black --check --line-length 79 --skip-string-normalization --extend-exclude="protos" $(CODE_FOLDERS) $(TEST_FOLDERS)
+
+migration:
+	poetry run alembic revision --autogenerate -m"$(x)"
+
+migrate:
+	poetry run alembic upgrade head
 
 update_proto:
-	python -m grpc_tools.protoc --python_out=. --grpc_python_out=. --pyi_out=. --proto_path=. protos/*.proto
+	poetry run python -m grpc_tools.protoc --python_out=. --grpc_python_out=. --pyi_out=. --proto_path=. protos/*.proto
 
-docker_up_postgres:
+db_up:
 	docker run --name postgres_container -d -e POSTGRES_PASSWORD=qwerty --network mynetwork postgres
 
-docker_build_gateway:
-	docker build -t gateway_image -f docker/Dockerfile.gateway .
-
-docker_run_gateway:
-	docker run --name gateway_container -d -p 127.0.0.1:8000:8000 --env-file .env --network mynetwork gateway_image
-
-docker_build_observer:
-	docker build -t observer_image -f docker/Dockerfile.observer .
-
-docker_run_observer:
-	docker run --name observer_container -d --env-file .env --network mynetwork observer_image
-
-docker_build_auth:
-	docker build -t auth_image -f docker/Dockerfile.auth .
-
-docker_run_auth:
-	docker run --name auth_container -d --env-file .env --network mynetwork auth_image
-
 docker_up:
-	docker-compose -f docker/docker-compose.yml up
+	docker-compose -f docker/docker-compose.yml up --build
 
-docker_rm:
-	docker container prune
+docker_build:
+	docker build -t $(x)_image -f docker/Dockerfile.$(x) .
+
+docker_run:
+ifeq ($(x),gateway)
+	docker run --name gateway_container -d -p 127.0.0.1:8000:8000 --env-file .env --network mynetwork gateway_image
+else
+	docker run --name $(x)_container -d --env-file .env --network mynetwork $(x)_image
+endif
+
+run_bandit:
+	poetry run bandit -r apps/ -f csv -o out.csv

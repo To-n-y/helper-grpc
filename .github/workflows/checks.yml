@@ -1,9 +1,7 @@
-name: Python application
+name: Static Checks
 
-on: push
-
-permissions:
-  contents: read
+on:
+  workflow_call:
 
 jobs:
   unit-tests-and-static-analyze:
@@ -31,12 +29,6 @@ jobs:
       if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
       run: poetry install --no-interaction --no-root
     - name: Run tests with pytest
-      run: poetry run pytest --cov=service
-    - name: Lint with flake8
-      run: poetry run flake8 service models clients api.py
-    - name: Lint with black
-      run: poetry run black --check --line-length 79 --skip-string-normalization --extend-exclude="protos" service models clients api.py
-    #- name: Check types with mypy
-    #  run: |
-    #    poetry run mypy --install-types
-    #    poetry run mypy --explicit-package-bases api.py
+      run: make test
+    - name: Run linters
+      run: make lint
