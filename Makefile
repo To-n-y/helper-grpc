@@ -1,4 +1,4 @@
-CODE_FOLDERS := apps service clients models
+CODE_FOLDERS := apps service clients db
 TEST_FOLDERS := tests
 
 

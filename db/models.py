@@ -61,11 +61,11 @@ class Plan(BaseModel):
 
 
 class Comment(BaseModel):
-    __tablename__ = 'Comment'
+    __tablename__ = "Comment"
 
     body = Column(Text, nullable=False)
-    user_id = Column(Integer, ForeignKey('User.id'), nullable=False)
-    event_id = Column(Integer, ForeignKey('Event.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey("User.id"), nullable=False)
+    event_id = Column(Integer, ForeignKey("Event.id"), nullable=False)
 
 
 class AuthToken(BaseModel):
@@ -74,32 +74,3 @@ class AuthToken(BaseModel):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("User.id"))
     token = Column(String, nullable=False)
-
-
-def connect_db():
-    engine = create_engine(str(POSTGRES_URL))
-    session = Session(bind=engine.connect())
-    return session
-
-
-# session = connect_db()
-# user = session.query(User).filter(User.username == '11').first()
-# print(user)
-# print(session.query(User).all())
-#session = connect_db()
-# if event is not None:
-#     session.delete(event)
-#     session.commit()
-# print(event)
-# session = connect_db()
-# t = Event(
-#         name='asaaaaaaaaaaaaa', type='as', age_restrictions=12, day=5
-#     )
-# a = session.add(
-#     t
-# )
-# new_event = session.new
-# print(new_event)
-# session.commit()
-# new_event = session.new
-# print(t.id)
