@@ -22,14 +22,22 @@ class EventsRepo:
         return event
 
     def delete_event(self, event_id: int) -> Optional[int]:
-        event = self.db.query(models.Event).filter(models.Event.id == event_id).first()
+        event = (
+            self.db.query(models.Event)
+            .filter(models.Event.id == event_id)
+            .first()
+        )
         if event is not None:
             self.db.delete(event)
             self.db.commit()
             return 1
 
     def update_event(self, event: models.Event) -> Optional[int]:
-        event = self.db.query(models.Event).filter(models.Event.id == event.id).first()
+        event = (
+            self.db.query(models.Event)
+            .filter(models.Event.id == event.id)
+            .first()
+        )
         if event is not None:
             event.name = event.name
             event.type = event.type
