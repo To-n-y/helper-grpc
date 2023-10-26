@@ -20,6 +20,4 @@ RUN apk add postgresql-dev gcc python3-dev musl-dev
 RUN pip install poetry
 RUN poetry install --no-interaction --no-root
 
-EXPOSE 8000
-
 #CMD ["poetry", "run", "uvicorn", "apps.api:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

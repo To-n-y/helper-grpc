@@ -9,7 +9,8 @@ from opentelemetry.instrumentation.grpc import (
 from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 from opentelemetry.sdk.trace import TracerProvider
 
-from models.models import User, Event, Plan, connect_db
+from db.base import connect_db
+from db.models import Event, Plan, User
 from protos import planner_pb2, planner_pb2_grpc
 
 
@@ -38,16 +39,28 @@ class PlannerService(planner_pb2_grpc.PlannerServiceServicer):
         session = connect_db()
         print("ER")
         user = session.query(User).filter(User.id == request.user_id).first()
-        print('ioj')
-        event = session.query(Event).filter(Event.name == request.event_name).first()
-        new_plan = Plan(user_id=request.user_id, event_id=event.id, event_type=event.type, name=event.name)
+        print("ioj")
+        event = (
+            session.query(Event)
+            .filter(Event.name == request.event_name)
+            .first()
+        )
+        new_plan = Plan(
+            user_id=request.user_id,
+            event_id=event.id,
+            event_type=event.type,
+            name=event.name,
+        )
         print("WERR")
         session.add(new_plan)
         session.commit()
         print("CreatePlan")
-        plan = planner_pb2.Plan(user_name=user.username,
-                                event=planner_pb2.Event(event_id=event.id, event_name=event.name,
-                                                        event_type=event.type))
+        plan = planner_pb2.Plan(
+            user_name=user.username,
+            event=planner_pb2.Event(
+                event_id=event.id, event_name=event.name, event_type=event.type
+            ),
+        )
         return planner_pb2.CreateUserPlanResponse(plan=plan)
 
     async def Check(self, request, context):

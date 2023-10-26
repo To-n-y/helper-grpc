@@ -1,7 +1,8 @@
-import typing as t
 import os
 import sys
-parent = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+import typing as t
+
+parent = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(1, parent)
 
 from fastapi import Body, Depends, FastAPI, HTTPException, Security, status
@@ -9,6 +10,7 @@ from fastapi.responses import JSONResponse
 from fastapi.security.api_key import APIKeyHeader
 from google.protobuf.json_format import MessageToDict
 from grpc.aio import AioRpcError
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from clients.auth_client import grpc_auth_client
 from clients.observer_client import grpc_observer_client
@@ -28,7 +30,7 @@ async def ping():
 
 @app.get("/event")
 async def get_events_list(
-        client: t.Any = Depends(grpc_observer_client),
+    client: t.Any = Depends(grpc_observer_client),
 ) -> JSONResponse:
     try:
         events = await client.ListEvent(observer_pb2.ListEventRequest())
@@ -40,8 +42,8 @@ async def get_events_list(
 
 @app.get("/event/{id:int}")
 async def get_event(
-        id: int,
-        client: t.Any = Depends(grpc_observer_client),
+    id: int,
+    client: t.Any = Depends(grpc_observer_client),
 ) -> JSONResponse:
     try:
         event = await client.ReadEventById(
@@ -55,11 +57,11 @@ async def get_event(
 
 @app.post("/event", status_code=status.HTTP_201_CREATED)
 async def create_event(
-        name: str,
-        typ: str,
-        age_rest: int,
-        day: int,
-        client: t.Any = Depends(grpc_observer_client),
+    name: str,
+    typ: str,
+    age_rest: int,
+    day: int,
+    client: t.Any = Depends(grpc_observer_client),
 ) -> JSONResponse:
     try:
         event = await client.CreateEvent(
@@ -75,12 +77,12 @@ async def create_event(
 
 @app.patch("/event/{id:int}")
 async def update_event(
-        id: int,
-        name: str,
-        type: str,
-        age_rest: int,
-        day: int,
-        client: t.Any = Depends(grpc_observer_client),
+    id: int,
+    name: str,
+    type: str,
+    age_rest: int,
+    day: int,
+    client: t.Any = Depends(grpc_observer_client),
 ) -> JSONResponse:
     try:
         event = await client.UpdateEventById(
@@ -96,8 +98,8 @@ async def update_event(
 
 @app.delete("/event/{id:int}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_event(
-        id: int,
-        client: t.Any = Depends(grpc_observer_client),
+    id: int,
+    client: t.Any = Depends(grpc_observer_client),
 ) -> JSONResponse:
     try:
         event = await client.DeleteEventById(
@@ -111,8 +113,8 @@ async def delete_event(
 
 @app.get("/user")
 async def get_user(
-        api_key: str = Security(api_key_header),
-        client: t.Any = Depends(grpc_auth_client),
+    api_key: str = Security(api_key_header),
+    client: t.Any = Depends(grpc_auth_client),
 ) -> JSONResponse:
     print(f"api_key_header {api_key}")
     try:
@@ -129,8 +131,8 @@ async def get_user(
 
 @app.post("/login")
 async def get_token(
-        user_form: UserLoginForm = Body(..., embed=True),
-        client: t.Any = Depends(grpc_auth_client),
+    user_form: UserLoginForm = Body(..., embed=True),
+    client: t.Any = Depends(grpc_auth_client),
 ) -> JSONResponse:
     try:
         token = await client.Login(
@@ -148,8 +150,8 @@ async def get_token(
 
 @app.post("/user")
 async def create_user(
-        user: UserCreateForm = Body(..., embed=True),
-        client: t.Any = Depends(grpc_auth_client),
+    user: UserCreateForm = Body(..., embed=True),
+    client: t.Any = Depends(grpc_auth_client),
 ) -> JSONResponse:
     try:
         user = await client.CreateUser(
@@ -170,18 +172,21 @@ async def create_user(
 
 @app.get("/plan")
 async def get_plans(
-        api_key: str = Security(api_key_header),
-        auth_client: t.Any = Depends(grpc_auth_client),
-        planner_client: t.Any = Depends(grpc_planner_client),
+    api_key: str = Security(api_key_header),
+    auth_client: t.Any = Depends(grpc_auth_client),
+    planner_client: t.Any = Depends(grpc_planner_client),
 ) -> JSONResponse:
     print(f"api_key_header {api_key}")
     try:
         curr_user = await auth_client.ReadUser(
             auth_pb2.ReadUserRequest(token=api_key)
         )
-        plans = await planner_client.ReadPlans(planner_pb2.ReadUserPlanRequest(user_id=curr_user.user.id))
+        plans = await planner_client.ReadPlans(
+            planner_pb2.ReadUserPlanRequest(user_id=curr_user.user.id)
+        )
     except AioRpcError as e:
         import traceback
+
         traceback.print_exc()
         raise HTTPException(status_code=400, detail=e.details())
 
@@ -190,10 +195,10 @@ async def get_plans(
 
 @app.post("/plan")
 async def create_plan(
-        event_name: str,
-        api_key: str = Security(api_key_header),
-        auth_client: t.Any = Depends(grpc_auth_client),
-        planner_client: t.Any = Depends(grpc_planner_client),
+    event_name: str,
+    api_key: str = Security(api_key_header),
+    auth_client: t.Any = Depends(grpc_auth_client),
+    planner_client: t.Any = Depends(grpc_planner_client),
 ) -> JSONResponse:
     print(f"api_key_header {api_key}")
     curr_user = None
@@ -203,10 +208,17 @@ async def create_plan(
             auth_pb2.ReadUserRequest(token=api_key)
         )
         plan = await planner_client.CreatePlan(
-            planner_pb2.CreateUserPlanRequest(user_id=curr_user.user.id, event_name=event_name))
+            planner_pb2.CreateUserPlanRequest(
+                user_id=curr_user.user.id, event_name=event_name
+            )
+        )
     except AioRpcError as e:
         import traceback
+
         traceback.print_exc()
         raise HTTPException(status_code=400, detail=e.details())
 
     return JSONResponse(MessageToDict(plan))
+
+
+Instrumentator().instrument(app).expose(app)
