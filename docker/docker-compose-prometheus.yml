@@ -1,0 +1,55 @@
+version: '4.0'
+
+services:
+  gateway:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.gateway
+    image: gateway_image
+    container_name: gateway_container
+    networks:
+      - internal
+    env_file:
+      - ../.env
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
+    command: poetry run uvicorn apps.api:app --host 0.0.0.0 --port 8000
+
+  prometheus:
+      image: prom/prometheus:latest
+      volumes:
+        - ../prometheus-grafana/prometheus_data/prometheus.yml:/etc/prometheus/prometheus.yml
+      container_name: prometheus_container
+      networks:
+        - internal
+      command:
+        - '--config.file=/etc/prometheus/prometheus.yml'
+      expose:
+        - "9090"
+      ports:
+        - "9090:9090"
+      restart: unless-stopped
+      depends_on:
+        - gateway
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana_container
+    networks:
+      - internal
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    env_file:
+      - ../prometheus-grafana/grafana/config.monitoring
+    volumes:
+      - ../prometheus-grafana/grafana/provisioning:/etc/grafana/provisioning
+
+networks:
+  internal:
+    driver: bridge

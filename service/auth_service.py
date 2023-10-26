@@ -6,7 +6,8 @@ from opentelemetry.instrumentation.grpc import GrpcAioInstrumentorServer
 from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 from opentelemetry.sdk.trace import TracerProvider
 
-from models.models import User, connect_db
+from db.base import connect_db
+from db.models import User
 from protos import auth_pb2, auth_pb2_grpc
 from utils.interceptors import AuthInterceptor
 from utils.jwt_utils import (
@@ -48,11 +49,11 @@ class AuthService(auth_pb2_grpc.AuthServiceServicer):
         )
 
         if cur_user is None:
-            return auth_pb2.LoginResponse(token='does not exist')
+            return auth_pb2.LoginResponse(token="does not exist")
         print("FIR")
         print(request.password, cur_user.password)
         if not verify_password(request.password, cur_user.password):
-            return auth_pb2.LoginResponse(token='incorrect password')
+            return auth_pb2.LoginResponse(token="incorrect password")
         print("SEC")
         print("Create new token")
         print(create_access_token(cur_user.email))

@@ -9,7 +9,8 @@ from opentelemetry.instrumentation.grpc import (
 from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 from opentelemetry.sdk.trace import TracerProvider
 
-from models.models import Event, connect_db
+from db.base import connect_db
+from db.models import Event
 from protos import observer_pb2, observer_pb2_grpc
 
 
@@ -49,7 +50,7 @@ class ObserverService(observer_pb2_grpc.ObserverServiceServicer):
     async def CreateEvent(self, request, context):
         if not (0 <= request.day <= 7):
             context.set_code(StatusCode.INVALID_ARGUMENT)
-            context.set_details('0<= day <=7')
+            context.set_details("0<= day <=7")
             return observer_pb2.CreateEventResponse()
         event = Event(
             name=request.name,

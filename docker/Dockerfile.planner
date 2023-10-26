@@ -5,14 +5,14 @@ WORKDIR /app
 COPY pyproject.toml .
 COPY poetry.lock .
 COPY README.md .
+RUN pip install poetry
+
 COPY service/planner_service.py ./service/
 COPY config.py .
-
 COPY models/ ./models/
 COPY protos/ ./protos/
 COPY apps/planner_app.py ./apps/
 
-RUN pip install poetry
 
 # install psycopg2 dependencies
 RUN apk update

@@ -19,9 +19,17 @@ def get_hashed_password(password: str) -> str:
 
 def verify_password(password: str, hashed_pass: str) -> bool:
     return password_context.verify(password, hashed_pass)
-a = get_hashed_password('string')
+
+
+a = get_hashed_password("string")
 print(a)
-print(verify_password('string', '$2b$12$nJMvGIGwGJ0b0Gr2EWt0n.Pb3TUztFS2kZddo2U5MAYN6W7PCucHK'))
+print(
+    verify_password(
+        "string", "$2b$12$nJMvGIGwGJ0b0Gr2EWt0n.Pb3TUztFS2kZddo2U5MAYN6W7PCucHK"
+    )
+)
+
+
 def create_access_token(
     subject: Union[str, Any], expires_delta: int | None = None
 ) -> str:

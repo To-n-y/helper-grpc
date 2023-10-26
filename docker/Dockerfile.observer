@@ -5,6 +5,10 @@ WORKDIR /app
 COPY pyproject.toml .
 COPY poetry.lock .
 COPY README.md .
+RUN apk update
+RUN pip install poetry
+RUN poetry install --no-interaction --no-root
+
 COPY service/observer_service.py ./service/
 COPY config.py .
 COPY models/ ./models/
@@ -13,14 +17,9 @@ COPY alembic/ ./alembic/
 COPY alembic.ini .
 COPY apps/observer_app.py ./apps/
 
-RUN pip install poetry
-
 # install psycopg2 dependencies
-RUN apk update
+
 RUN apk add postgresql-dev gcc python3-dev musl-dev
-
-
-RUN poetry install --no-interaction --no-root
 
 
 #CMD ["poetry", "run", "alembic", "upgrade", "head"]
