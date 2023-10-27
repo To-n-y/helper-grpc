@@ -1,26 +1,31 @@
 FROM python:3-alpine
 
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
 WORKDIR /app
 
 COPY pyproject.toml .
 COPY poetry.lock .
 COPY README.md .
-RUN apk update
-RUN pip install poetry
-RUN poetry install --no-interaction --no-root
 
 COPY service/observer_service.py ./service/
 COPY config.py .
-COPY models/ ./models/
+COPY db/ ./db/
 COPY protos/ ./protos/
 COPY alembic/ ./alembic/
 COPY alembic.ini .
-COPY apps/observer_app.py ./apps/
+COPY apps/observer_app.py ./apps/observer_app.py
+
+RUN apk update
+RUN pip install poetry
 
 # install psycopg2 dependencies
 
 RUN apk add postgresql-dev gcc python3-dev musl-dev
+RUN poetry install --no-interaction --no-root --no-dev
 
+ENTRYPOINT ["poetry", "run", "python", "apps/observer_app.py"]
 
 #CMD ["poetry", "run", "alembic", "upgrade", "head"]
 #CMD ["poetry", "run", "python", "observer_app.py"]

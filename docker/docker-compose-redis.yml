@@ -1,12 +1,13 @@
 version: '4.0'
+name: redis
 services:
   postgres:
     image: postgres
+    container_name: postgres_container
     networks:
       - internal
     environment:
       POSTGRES_PASSWORD: "qwerty"
-
 
   gateway:
     build:
@@ -18,13 +19,16 @@ services:
       - internal
     env_file:
       - ../.env
+    volumes:
+      - ../apps:/app/apps
     expose:
       - "8000"
     ports:
       - "8000:8000"
-    command: bash -c "poetry run uvicorn apps.api:app --host 0.0.0.0 --port 8000"
+    command: sh -c "poetry run uvicorn apps.api:app --host 0.0.0.0 --port 8000 --reload"
     depends_on:
       - postgres
+      - redis
 
   observer:
     build:
@@ -36,36 +40,29 @@ services:
       - internal
     env_file:
       - ../.env
+    volumes:
+      - ../apps:/app/apps
+      - ../service:/app/service
     command:
-      - bash -c "poetry run alembic upgrade head"
-      - bash -c "poetry run python apps/observer_app.py"
+      - sh -c "poetry run alembic upgrade head"
+      - sh -c "poetry run python apps/observer_app.py"
     depends_on:
       - gateway
 
-  auth:
-    build:
-      context: ../
-      dockerfile: docker/Dockerfile.auth
+  redis:
+    image: redis:6
+    container_name: redis_container
+    restart: unless-stopped
     networks:
       - internal
-    env_file:
-      - ../.env
-    command: bash -c "poetry run python apps/auth_app.py"
-    depends_on:
-      - gateway
-
-  planner:
-    build:
-      context: ../
-      dockerfile: docker/Dockerfile.planner
-    networks:
-      - internal
-    env_file:
-      - ../.env
-    command: bash -c "poetry run python apps/planner_app.py"
-    depends_on:
-      - gateway
-
+    volumes:
+      - ./redis/data:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    expose:
+      - "6379"
+    ports:
+      - "6379:6379"
+    command: redis-server /usr/local/etc/redis/redis.conf
 
 networks:
   internal:

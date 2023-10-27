@@ -8,7 +8,7 @@ RUN rm -rf
 COPY README.md .
 COPY service/auth_service.py ./service/
 COPY config.py .
-COPY models/ ./models/
+COPY db/ ./db/
 COPY forms.py .
 COPY utils/ ./utils/
 COPY protos/ ./protos/

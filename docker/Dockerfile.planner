@@ -9,7 +9,7 @@ RUN pip install poetry
 
 COPY service/planner_service.py ./service/
 COPY config.py .
-COPY models/ ./models/
+COPY db/ ./db/
 COPY protos/ ./protos/
 COPY apps/planner_app.py ./apps/
 

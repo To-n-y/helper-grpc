@@ -1,10 +1,14 @@
+import json
 import os
 import sys
 import typing as t
 
+from protos.observer_pb2 import Event
+
 parent = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(1, parent)
 
+import aioredis
 from fastapi import Body, Depends, FastAPI, HTTPException, Security, status
 from fastapi.responses import JSONResponse
 from fastapi.security.api_key import APIKeyHeader
@@ -15,12 +19,28 @@ from prometheus_fastapi_instrumentator import Instrumentator
 from clients.auth_client import grpc_auth_client
 from clients.observer_client import grpc_observer_client
 from clients.planner_client import grpc_planner_client
+from db.base import connect_db
+from db.events import EventsRepo
 from forms import UserCreateForm, UserLoginForm
 from protos import auth_pb2, observer_pb2, planner_pb2
 
 api_key_header = APIKeyHeader(name="rpc-auth-key")
 
 app = FastAPI()
+
+# redis = None
+
+
+# @app.on_event('startup')
+# async def startup_event():
+#     global redis
+#     redis = await aioredis.create_redis(address=('redis', 6379))
+#
+#
+# @app.on_event('shutdown')
+# async def shutdown_event():
+#     redis.close()
+#     await redis.wait_closed()
 
 
 @app.get("/")
@@ -45,10 +65,19 @@ async def get_event(
     id: int,
     client: t.Any = Depends(grpc_observer_client),
 ) -> JSONResponse:
+    # cache = await redis.get(str(id))
+    # if cache is not None:
+    #     print("CACHE")
+    #     cache_event = Event(**(json.loads(cache.decode('utf-8'))))
+    #     return JSONResponse(MessageToDict(observer_pb2.ReadEventResponse(Event=cache_event)))
     try:
         event = await client.ReadEventById(
             observer_pb2.ReadEventByIdRequest(id=id)
         )
+        # await redis.set(str(id), json.dumps(
+        #     {"id": event.Event.id, "name": event.Event.name,
+        #      "type": event.Event.type, "age_restrictions": event.Event.age_restrictions,
+        #      "day": event.Event.day}), expire=3600)
     except AioRpcError as e:
         raise HTTPException(status_code=400, detail=e.details())
 
