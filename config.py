@@ -31,3 +31,7 @@ JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "secret2")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
 
 ALGORITHM = os.environ.get("ALGORITHM", "HS256")
+
+
+# psql -U postgres
+# create database mydb;
