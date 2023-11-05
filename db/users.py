@@ -27,3 +27,32 @@ class UsersRepo:
         self.db.add(user)
         self.db.commit()
         return user
+
+    def delete_user(self, user_id: int) -> Optional[int]:
+        user = (
+            self.db.query(models.User)
+            .filter(models.User.id == user_id)
+            .first()
+        )
+        if user is not None:
+            self.db.delete(user)
+            self.db.commit()
+            return 1
+
+    def update_user(
+        self, user_id: int, new_user: models.User
+    ) -> Optional[int]:
+        user = (
+            self.db.query(models.User)
+            .filter(models.User.id == user_id)
+            .first()
+        )
+        if user is not None:
+            user.username = new_user.username
+            user.role = new_user.role
+            user.gender = new_user.gender
+            user.password = new_user.password
+            user.email = new_user.email
+            self.db.add(user)
+            self.db.commit()
+            return 1

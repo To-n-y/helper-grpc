@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from . import auth_pb2 as protos_dot_auth__pb2
+from protos import auth_pb2 as protos_dot_auth__pb2
 
 
 class AuthServiceStub(object):
@@ -15,20 +15,20 @@ class AuthServiceStub(object):
             channel: A grpc.Channel.
         """
         self.ReadUser = channel.unary_unary(
-            "/auth.AuthService/ReadUser",
-            request_serializer=protos_dot_auth__pb2.ReadUserRequest.SerializeToString,
-            response_deserializer=protos_dot_auth__pb2.ReadUserResponse.FromString,
-        )
+                '/auth.AuthService/ReadUser',
+                request_serializer=protos_dot_auth__pb2.ReadUserRequest.SerializeToString,
+                response_deserializer=protos_dot_auth__pb2.ReadUserResponse.FromString,
+                )
         self.Login = channel.unary_unary(
-            "/auth.AuthService/Login",
-            request_serializer=protos_dot_auth__pb2.LoginRequest.SerializeToString,
-            response_deserializer=protos_dot_auth__pb2.LoginResponse.FromString,
-        )
+                '/auth.AuthService/Login',
+                request_serializer=protos_dot_auth__pb2.LoginRequest.SerializeToString,
+                response_deserializer=protos_dot_auth__pb2.LoginResponse.FromString,
+                )
         self.CreateUser = channel.unary_unary(
-            "/auth.AuthService/CreateUser",
-            request_serializer=protos_dot_auth__pb2.CreateUserRequest.SerializeToString,
-            response_deserializer=protos_dot_auth__pb2.CreateUserResponse.FromString,
-        )
+                '/auth.AuthService/CreateUser',
+                request_serializer=protos_dot_auth__pb2.CreateUserRequest.SerializeToString,
+                response_deserializer=protos_dot_auth__pb2.CreateUserResponse.FromString,
+                )
 
 
 class AuthServiceServicer(object):
@@ -37,133 +37,96 @@ class AuthServiceServicer(object):
     def ReadUser(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def Login(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def CreateUser(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
 
 def add_AuthServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-        "ReadUser": grpc.unary_unary_rpc_method_handler(
-            servicer.ReadUser,
-            request_deserializer=protos_dot_auth__pb2.ReadUserRequest.FromString,
-            response_serializer=protos_dot_auth__pb2.ReadUserResponse.SerializeToString,
-        ),
-        "Login": grpc.unary_unary_rpc_method_handler(
-            servicer.Login,
-            request_deserializer=protos_dot_auth__pb2.LoginRequest.FromString,
-            response_serializer=protos_dot_auth__pb2.LoginResponse.SerializeToString,
-        ),
-        "CreateUser": grpc.unary_unary_rpc_method_handler(
-            servicer.CreateUser,
-            request_deserializer=protos_dot_auth__pb2.CreateUserRequest.FromString,
-            response_serializer=protos_dot_auth__pb2.CreateUserResponse.SerializeToString,
-        ),
+            'ReadUser': grpc.unary_unary_rpc_method_handler(
+                    servicer.ReadUser,
+                    request_deserializer=protos_dot_auth__pb2.ReadUserRequest.FromString,
+                    response_serializer=protos_dot_auth__pb2.ReadUserResponse.SerializeToString,
+            ),
+            'Login': grpc.unary_unary_rpc_method_handler(
+                    servicer.Login,
+                    request_deserializer=protos_dot_auth__pb2.LoginRequest.FromString,
+                    response_serializer=protos_dot_auth__pb2.LoginResponse.SerializeToString,
+            ),
+            'CreateUser': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateUser,
+                    request_deserializer=protos_dot_auth__pb2.CreateUserRequest.FromString,
+                    response_serializer=protos_dot_auth__pb2.CreateUserResponse.SerializeToString,
+            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-        "auth.AuthService", rpc_method_handlers
-    )
+            'auth.AuthService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
-# This class is part of an EXPERIMENTAL API.
+ # This class is part of an EXPERIMENTAL API.
 class AuthService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def ReadUser(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
-        return grpc.experimental.unary_unary(
-            request,
+    def ReadUser(request,
             target,
-            "/auth.AuthService/ReadUser",
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/auth.AuthService/ReadUser',
             protos_dot_auth__pb2.ReadUserRequest.SerializeToString,
             protos_dot_auth__pb2.ReadUserResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-        )
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def Login(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
-        return grpc.experimental.unary_unary(
-            request,
+    def Login(request,
             target,
-            "/auth.AuthService/Login",
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/auth.AuthService/Login',
             protos_dot_auth__pb2.LoginRequest.SerializeToString,
             protos_dot_auth__pb2.LoginResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-        )
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def CreateUser(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
-        return grpc.experimental.unary_unary(
-            request,
+    def CreateUser(request,
             target,
-            "/auth.AuthService/CreateUser",
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/auth.AuthService/CreateUser',
             protos_dot_auth__pb2.CreateUserRequest.SerializeToString,
             protos_dot_auth__pb2.CreateUserResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-        )
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
