@@ -1,17 +1,7 @@
 import datetime
 
-from sqlalchemy import (
-    TIMESTAMP,
-    Column,
-    ForeignKey,
-    Integer,
-    String,
-    Text,
-    create_engine,
-)
-from sqlalchemy.orm import Session, declarative_base
-
-from config import POSTGRES_URL
+from sqlalchemy import TIMESTAMP, Column, ForeignKey, Integer, String, Text
+from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 
@@ -40,6 +30,11 @@ class User(BaseModel):
     gender = Column(String(255), nullable=False)
     password = Column(String(255), nullable=False)
     email = Column(String(255), unique=True, nullable=False)
+
+
+class UserStats(BaseModel):
+    __tablename__ = "User_stats"
+    user_id = Column(Integer, ForeignKey("User.id"))
 
 
 class Event(BaseModel):

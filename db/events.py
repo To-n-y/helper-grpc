@@ -1,8 +1,9 @@
-from typing import Optional
+from typing import Optional, Type
 
 from sqlalchemy.orm import Session
 
 from db import models
+from protos.observer_pb2 import Event
 
 
 class EventsRepo:
@@ -15,6 +16,10 @@ class EventsRepo:
             .filter(models.Event.id == event_id)
             .first()
         )
+
+    def get_event_list(self) -> list[Type[Event]]:
+        events = self.db.query(models.Event).all()
+        return events
 
     def create_event(self, event: models.Event) -> models.Event:
         self.db.add(event)
@@ -32,20 +37,19 @@ class EventsRepo:
             self.db.commit()
             return 1
 
-    def update_event(self, event: models.Event) -> Optional[int]:
+    def update_event(
+        self, event_id: int, new_event: models.Event
+    ) -> Optional[int]:
         event = (
             self.db.query(models.Event)
-            .filter(models.Event.id == event.id)
+            .filter(models.Event.id == event_id)
             .first()
         )
         if event is not None:
-            event.name = event.name
-            event.type = event.type
-            event.age_restrictions = event.age_restrictions
-            event.day = event.day
+            event.name = new_event.name
+            event.type = new_event.type
+            event.age_restrictions = new_event.age_restrictions
+            event.day = new_event.day
             self.db.add(event)
             self.db.commit()
             return 1
-
-
-print(models.Event.name)

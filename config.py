@@ -18,6 +18,10 @@ POSTGRES_URL = os.environ.get(
     "POSTGRES_URL", "postgresql://postgres:qwerty@localhost:5432/mydb"
 )
 
+TEST_POSTGRES_URL = os.environ.get(
+    "TEST_POSTGRES_URL", "postgresql://postgres:qwerty@localhost:5432/mytestdb"
+)
+
 POSTGRES_URL_DOCKER = os.environ.get(
     "POSTGRES_URL_DOCKER", "postgresql://postgres:qwerty@localhost:5432/mydb"
 )
