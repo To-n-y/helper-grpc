@@ -56,8 +56,8 @@ services:
     networks:
       - internal
     volumes:
-      - ./redis/data:/data
-      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - ../redis/data:/data
+      - ../redis/redis.conf:/usr/local/etc/redis/redis.conf
     expose:
       - "6379"
     ports:
