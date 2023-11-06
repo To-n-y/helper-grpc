@@ -25,7 +25,7 @@ async def consume():
                 user_id = int(val)
                 user_stat = UserStats(user_id=user_id)
                 with Session(bind=engine.connect()) as session:
-                    created_event = UserStatsRepo(session).create_user_stat(
+                    UserStatsRepo(session).create_user_stat(
                         user_stat=user_stat
                     )
             #     msg.topic,

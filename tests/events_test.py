@@ -37,22 +37,29 @@ class TestObserver:
         context_mock.set_details.assert_called_with("0 <= day <= 7")
 
         request_mock.id = 1
-        events_list = await ObserverService().ListEvent(request=request_mock, context=context_mock)
+        events_list = await ObserverService().ListEvent(
+            request=request_mock, context=context_mock
+        )
         assert len(events_list.events) == 1
         assert events_list.events[0].id == 1
         assert events_list.events[0].day == 1
 
-        event = await ObserverService().ReadEventById(request=request_mock, context=context_mock)
+        event = await ObserverService().ReadEventById(
+            request=request_mock, context=context_mock
+        )
         assert event.event.name == 'testname'
 
         request_mock.name = 'newname'
-        event = await ObserverService().UpdateEventById(request=request_mock, context=context_mock)
+        event = await ObserverService().UpdateEventById(
+            request=request_mock, context=context_mock
+        )
         assert event.event.name == 'newname'
 
-        await ObserverService().DeleteEventById(request=request_mock, context=context_mock)
+        await ObserverService().DeleteEventById(
+            request=request_mock, context=context_mock
+        )
 
-        events = await ObserverService().ListEvent(request=request_mock, context=context_mock)
+        events = await ObserverService().ListEvent(
+            request=request_mock, context=context_mock
+        )
         assert len(events.events) == 0
-
-
-
