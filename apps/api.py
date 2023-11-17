@@ -12,12 +12,10 @@ from fastapi.security.api_key import APIKeyHeader
 from google.protobuf.json_format import MessageToDict
 from grpc.aio import AioRpcError
 from prometheus_fastapi_instrumentator import Instrumentator
-from sqlalchemy.orm import Session
 
 from clients.auth_client import grpc_auth_client
 from clients.observer_client import grpc_observer_client
 from clients.planner_client import grpc_planner_client
-from db.base import connect_db
 from forms import UserCreateForm, UserLoginForm
 from protos import auth_pb2, observer_pb2, planner_pb2
 
@@ -50,7 +48,6 @@ async def ping():
 @app.get("/event")
 async def get_events_list(
     client: t.Any = Depends(grpc_observer_client),
-    session: Session = Depends(connect_db),
 ) -> JSONResponse:
     try:
         events = await client.ListEvent(observer_pb2.ListEventRequest())

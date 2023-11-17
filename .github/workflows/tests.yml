@@ -32,7 +32,8 @@ jobs:
         run: poetry install --no-interaction --no-root
       - name: Run tests
         run: |
-          make test
+          docker-compose -f docker/docker-compose-tests.yml up --build -d &&
+          docker-compose -f docker/docker-compose-tests.yml exec -T tests poetry run pytest --slow
   security_check:
     runs-on: ubuntu-latest
     needs: [ call-checks ]

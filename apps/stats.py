@@ -28,12 +28,6 @@ async def consume():
                     UserStatsRepo(session).create_user_stat(
                         user_stat=user_stat
                     )
-            #     msg.topic,
-            #     msg.partition,
-            #     msg.offset,
-            #     msg.key,
-            #     msg.value,
-            #     msg.timestamp,
     finally:
         await consumer.stop()
 
