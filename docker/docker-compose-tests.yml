@@ -1,5 +1,4 @@
 version: '3.8'
-name: tests
 services:
   postgres:
     image: postgres
