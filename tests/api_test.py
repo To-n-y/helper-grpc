@@ -57,3 +57,19 @@
 #             side_effect=Exception):
 #             test_game.set_guess_word()
 #             assert test_game.guess_word in reserve_data
+import os
+
+from fastapi.testclient import TestClient
+
+from apps.api import app
+
+client = TestClient(app)
+
+
+class TestApiGateway:
+    def test_ping(self):
+        response = client.get('/')
+        assert response.status_code == 200
+        assert response.json() == {
+            "message": f"Hello, {os.getenv('MY_BACKEND_NAME')}"
+        }

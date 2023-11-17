@@ -1,27 +1,30 @@
 FROM python:3-alpine
 
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+ENV IN_CONTAINER 1
+
 WORKDIR /app
+
+RUN apk update
+RUN pip install poetry
+# install psycopg2 dependencies
+RUN apk add postgresql-dev gcc python3-dev musl-dev
 
 COPY pyproject.toml .
 COPY poetry.lock .
 RUN rm -rf
 COPY README.md .
+
+RUN poetry install --no-interaction --no-root
+
 COPY service/auth_service.py ./service/
 COPY config.py .
-COPY models/ ./models/
+COPY db/ ./db/
 COPY forms.py .
 COPY utils/ ./utils/
 COPY protos/ ./protos/
 COPY apps/auth_app.py ./apps/
-
-RUN pip install poetry
-
-# install psycopg2 dependencies
-RUN apk update
-RUN apk add postgresql-dev gcc python3-dev musl-dev
-
-
-RUN poetry install --no-interaction --no-root
-
 
 #CMD ["poetry", "run", "python", "auth_app.py"]

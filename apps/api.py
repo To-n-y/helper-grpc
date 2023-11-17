@@ -5,6 +5,7 @@ import typing as t
 parent = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(1, parent)
 
+from aiokafka import AIOKafkaProducer
 from fastapi import Body, Depends, FastAPI, HTTPException, Security, status
 from fastapi.responses import JSONResponse
 from fastapi.security.api_key import APIKeyHeader
@@ -23,9 +24,25 @@ api_key_header = APIKeyHeader(name="rpc-auth-key")
 app = FastAPI()
 
 
+async def send_one(key, value):
+    producer = AIOKafkaProducer(
+        bootstrap_servers='localhost:9094'
+    )  # TODO config(URL)
+    # Get cluster layout and initial topic/partition leadership information
+    await producer.start()
+    try:
+        # Produce message
+        await producer.send_and_wait(
+            topic="my_topic", key=str(key).encode(), value=str(value).encode()
+        )  # TODO config(topic)
+    finally:
+        # Wait for all pending messages to be delivered or expire.
+        await producer.stop()
+
+
 @app.get("/")
 async def ping():
-    return {"ping": True}
+    return {"message": f"Hello, {os.getenv('MY_BACKEND_NAME')}"}
 
 
 @app.get("/event")
@@ -121,6 +138,7 @@ async def get_user(
         curr_user = await client.ReadUser(
             auth_pb2.ReadUserRequest(token=api_key)
         )
+        await send_one(key='get_user_call', value=curr_user.user.id)
     except AioRpcError as e:
         import traceback
 

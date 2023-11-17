@@ -1,23 +1,30 @@
 FROM python:3-alpine
 
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+ENV IN_CONTAINER 1
+
 WORKDIR /app
-
-COPY pyproject.toml .
-COPY poetry.lock .
-COPY README.md .
-COPY clients/ ./clients/
-COPY forms.py .
-COPY config.py .
-
-COPY utils/ ./utils
-COPY protos/ ./protos/
-COPY apps/api.py ./apps/
 
 # install psycopg2 dependencies
 RUN apk update
 RUN apk add postgresql-dev gcc python3-dev musl-dev
-
 RUN pip install poetry
-RUN poetry install --no-interaction --no-root
+
+COPY pyproject.toml .
+COPY poetry.lock .
+COPY README.md .
+
+RUN poetry install --no-interaction --no-root --no-dev
+
+COPY clients/ ./clients/
+COPY forms.py .
+COPY config.py .
+COPY utils/ ./utils
+COPY protos/ ./protos/
+COPY apps/api.py ./apps/
+
+ENTRYPOINT ["poetry", "run"]
 
 #CMD ["poetry", "run", "uvicorn", "apps.api:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

@@ -18,7 +18,7 @@ message CreateEventRequest {
 }
 
 message CreateEventResponse {
-  Event Event = 1;
+  Event event = 1;
 }
 
 message ReadEventByIdRequest {
@@ -26,7 +26,7 @@ message ReadEventByIdRequest {
 }
 
 message ReadEventResponse {
-  Event Event = 1;
+  Event event = 1;
 }
 
 message UpdateEventByIdRequest {
@@ -38,7 +38,7 @@ message UpdateEventByIdRequest {
 }
 
 message UpdateEventResponse {
-  Event Event = 1;
+  Event event = 1;
 }
 
 message DeleteEventByIdRequest {
@@ -52,7 +52,7 @@ message DeleteEventResponse {
 message ListEventRequest {}
 
 message ListEventResponse {
-  repeated Event Events = 1;
+  repeated Event events = 1;
 }
 
 

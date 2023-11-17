@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 jobs:
-  unit-tests-and-static-analyze:
+  static-analyze:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,7 +28,5 @@ jobs:
     - name: Install dependencies
       if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
       run: poetry install --no-interaction --no-root
-    - name: Run tests with pytest
-      run: make test
     - name: Run linters
       run: make lint

@@ -50,3 +50,6 @@ endif
 
 run_bandit:
 	poetry run bandit -r apps/ -f csv -o out.csv
+
+
+# openssl req -x509 -newkey rsa:4096 -nodes -out cert.pem -keyout key.pem -days 365

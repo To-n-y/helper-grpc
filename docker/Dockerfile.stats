@@ -18,10 +18,7 @@ COPY README.md .
 
 RUN poetry install --no-interaction --no-root
 
-COPY service/planner_service.py ./service/
 COPY config.py .
 COPY db/ ./db/
 COPY protos/ ./protos/
-COPY apps/planner_app.py ./apps/
-
-#CMD ["poetry", "run", "python", "planner_app.py"]
+COPY apps/stats.py ./apps/

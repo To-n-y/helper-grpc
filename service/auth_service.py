@@ -5,10 +5,12 @@ from opentelemetry import trace
 from opentelemetry.instrumentation.grpc import GrpcAioInstrumentorServer
 from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 from opentelemetry.sdk.trace import TracerProvider
+from sqlalchemy.orm import Session
 
-from db.base import connect_db
+from db.base import connect_db, engine
 from db.models import User
-from protos import auth_pb2, auth_pb2_grpc
+from db.users import UsersRepo
+from protos import auth_pb2, auth_pb2_grpc, observer_pb2
 from utils.interceptors import AuthInterceptor
 from utils.jwt_utils import (
     create_access_token,
@@ -42,19 +44,14 @@ class AuthService(auth_pb2_grpc.AuthServiceServicer):
         )
 
     async def Login(self, request, context):
-        session = connect_db()
-
-        cur_user = (
-            session.query(User).filter(User.username == request.name).first()
-        )
+        with Session(bind=engine.connect()) as session:
+            cur_user = UsersRepo(session).get_user_by_username(request.name)
 
         if cur_user is None:
             return auth_pb2.LoginResponse(token="does not exist")
-        print("FIR")
         print(request.password, cur_user.password)
         if not verify_password(request.password, cur_user.password):
             return auth_pb2.LoginResponse(token="incorrect password")
-        print("SEC")
         print("Create new token")
         print(create_access_token(cur_user.email))
         return auth_pb2.LoginResponse(
@@ -62,24 +59,23 @@ class AuthService(auth_pb2_grpc.AuthServiceServicer):
         )
 
     async def CreateUser(self, request, context):
-        session = connect_db()
         hashed_password = get_hashed_password(request.password)
-        new_user = User(
+        user = User(
             username=request.name,
             email=request.email,
             gender=request.gender,
             password=hashed_password,
         )
-        session.add(new_user)
-        session.commit()
+
+        with Session(bind=engine.connect()) as session:
+            created_user = UsersRepo(session).create_user(user=user)
+            new_user = auth_pb2.User(
+                id=created_user.id,
+                name=created_user.username,
+                role=created_user.role,
+            )
         print("Create new user")
-        return auth_pb2.CreateUserResponse(
-            user={
-                "id": new_user.id,
-                "name": new_user.username,
-                "role": new_user.role,
-            }
-        )
+        return auth_pb2.CreateUserResponse(user=new_user)
 
     async def Check(self, request, context):
         return health_pb2.HealthCheckResponse(
