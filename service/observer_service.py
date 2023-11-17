@@ -1,7 +1,6 @@
+import asyncio
 import json
-import os
 
-import aioredis
 from grpc import StatusCode, aio
 from grpc_health.v1 import health_pb2, health_pb2_grpc
 from grpc_reflection.v1alpha import reflection
@@ -14,12 +13,21 @@ from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 from opentelemetry.sdk.trace import TracerProvider
 from sqlalchemy.orm import Session
 
+from clients.redis_client import RedisClientEmulator, get_redis_client
 from db.base import engine
 from db.events import EventsRepo
 from db.models import Event
 from protos import observer_pb2, observer_pb2_grpc
 
-redis = None
+redis = RedisClientEmulator()
+
+
+async def init_redis_client():
+    global redis
+    redis = await get_redis_client()
+
+
+asyncio.run(get_redis_client())
 
 
 class ObserverService(observer_pb2_grpc.ObserverServiceServicer):
@@ -42,14 +50,13 @@ class ObserverService(observer_pb2_grpc.ObserverServiceServicer):
 
     # single event
     async def ReadEventById(self, request, context):
-        if os.getenv('IN_CONTAINER') is not None:
-            cache = await redis.get(str(request.id))
-            if cache is not None:
-                print("GET FROM CACHE")
-                cache_event = observer_pb2.Event(
-                    **(json.loads(cache.decode('utf-8')))
-                )
-                return observer_pb2.ReadEventResponse(event=cache_event)
+        cache = await redis.get(str(request.id))
+        if cache is not None:
+            print("GET FROM CACHE")
+            cache_event = observer_pb2.Event(
+                **(json.loads(cache.decode('utf-8')))
+            )
+            return observer_pb2.ReadEventResponse(event=cache_event)
         # session = connect_db()
         with Session(bind=engine.connect()) as session:
             event = EventsRepo(session).get_event(request.id)
@@ -61,21 +68,20 @@ class ObserverService(observer_pb2_grpc.ObserverServiceServicer):
                 day=event.day,
             )
             print("GetEventById")
-        if os.getenv('IN_CONTAINER') is not None:
-            await redis.set(
-                str(request.id),
-                json.dumps(
-                    {
-                        "id": event.id,
-                        "name": event.name,
-                        "type": event.type,
-                        "age_restrictions": event.age_restrictions,
-                        "day": event.day,
-                    }
-                ),
-                expire=3600,
-            )
-            print('CACHED')
+        await redis.set(
+            str(request.id),
+            json.dumps(
+                {
+                    "id": event.id,
+                    "name": event.name,
+                    "type": event.type,
+                    "age_restrictions": event.age_restrictions,
+                    "day": event.day,
+                }
+            ),
+            expire=3600,
+        )
+        print('CACHED')
         return observer_pb2.ReadEventResponse(event=event_response)
 
     # create event
@@ -118,23 +124,22 @@ class ObserverService(observer_pb2_grpc.ObserverServiceServicer):
             )
         # event = session.query(Event).filter(Event.id == request.id).first()
 
-        if os.getenv('IN_CONTAINER') is not None:
-            exist_cache = await redis.get(str(request.id))
-            if exist_cache is not None:
-                await redis.set(
-                    str(request.id),
-                    json.dumps(
-                        {
-                            "id": event.id,
-                            "name": event.name,
-                            "type": event.type,
-                            "age_restrictions": event.age_restrictions,
-                            "day": event.day,
-                        }
-                    ),
-                    expire=3600,
-                )
-                print('UPDATE CACHE')
+        exist_cache = await redis.get(str(request.id))
+        if exist_cache is not None:
+            await redis.set(
+                str(request.id),
+                json.dumps(
+                    {
+                        "id": event.id,
+                        "name": event.name,
+                        "type": event.type,
+                        "age_restrictions": event.age_restrictions,
+                        "day": event.day,
+                    }
+                ),
+                expire=3600,
+            )
+            print('UPDATE CACHE')
         print("UpdateEvent")
         upd_event = observer_pb2.Event(
             id=request.id,
@@ -151,11 +156,10 @@ class ObserverService(observer_pb2_grpc.ObserverServiceServicer):
         with Session(bind=engine.connect()) as session:
             EventsRepo(session).delete_event(request.id)
 
-        if os.getenv('IN_CONTAINER') is not None:
-            exist_cache = await redis.get(str(request.id))
-            if exist_cache is not None:
-                await redis.delete(request.id)
-                print("DELETE FROM CACHE")
+        exist_cache = await redis.get(str(request.id))
+        if exist_cache is not None:
+            await redis.delete(request.id)
+            print("DELETE FROM CACHE")
         print("DeleteEventById")
         return observer_pb2.DeleteEventResponse(success=True)
 
@@ -171,9 +175,6 @@ class ObserverService(observer_pb2_grpc.ObserverServiceServicer):
 
 
 async def start(addr, jaeger_addr):
-    if os.getenv('IN_CONTAINER') is not None:
-        global redis
-        redis = await aioredis.create_redis(address=('localhost', 6379))
     trace.set_tracer_provider(
         TracerProvider(resource=Resource.create({SERVICE_NAME: "Observer"}))
     )
