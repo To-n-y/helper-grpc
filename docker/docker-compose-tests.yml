@@ -1,0 +1,28 @@
+version: '4.0'
+name: tests
+services:
+  postgres:
+    image: postgres
+    container_name: postgres_container
+    networks:
+      - internal
+    environment:
+      POSTGRES_PASSWORD: "qwerty"
+
+  tests:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.tests
+    image: tests_image
+    container_name: tests_container
+    networks:
+      - internal
+    env_file:
+      - ../.env
+    command: sh -c "poetry run uvicorn apps.api:app --host 0.0.0.0 --port 8000"
+    depends_on:
+      - postgres
+
+networks:
+  internal:
+    driver: bridge

@@ -1,25 +1,27 @@
 FROM python:3-alpine
 
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+ENV IN_CONTAINER 1
+
 WORKDIR /app
+
+RUN apk update
+RUN pip install poetry
+# install psycopg2 dependencies
+RUN apk add postgresql-dev gcc python3-dev musl-dev
 
 COPY pyproject.toml .
 COPY poetry.lock .
 COPY README.md .
-RUN pip install poetry
+
+RUN poetry install --no-interaction --no-root
 
 COPY service/planner_service.py ./service/
 COPY config.py .
 COPY db/ ./db/
 COPY protos/ ./protos/
 COPY apps/planner_app.py ./apps/
-
-
-# install psycopg2 dependencies
-RUN apk update
-RUN apk add postgresql-dev gcc python3-dev musl-dev
-
-
-RUN poetry install --no-interaction --no-root
-
 
 #CMD ["poetry", "run", "python", "planner_app.py"]

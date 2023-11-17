@@ -6,13 +6,13 @@ from sqlalchemy import engine_from_config, pool
 from alembic import context
 from db.models import *
 
-from config import POSTGRES_URL_DOCKER, TEST_POSTGRES_URL
+from config import POSTGRES_URL, TEST_POSTGRES_URL
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
-config.set_main_option("sqlalchemy.url", POSTGRES_URL_DOCKER)
+config.set_main_option("sqlalchemy.url", POSTGRES_URL)
 if os.environ['TESTING'] is not None:
     config.set_main_option("sqlalchemy.url", TEST_POSTGRES_URL)
 # Interpret the config file for Python logging.
